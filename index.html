@@ -3,295 +3,295 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>S.A.B. ULTIMATE v9.0</title>
+    <title>S.A.B. ULTIMATE v10.0</title>
     <style>
-        /* --- СТИЛИ (BLACK & WHITE) --- */
-        body { background: #000; color: #fff; font-family: 'Segoe UI', sans-serif; margin: 0; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+        /* --- АДАПТИВНЫЙ ДИЗАЙН (MOBILE FIRST) --- */
+        :root { --bg: #000; --card: #0a0a0a; --border: #222; --accent: #fff; --gold: #ffd700; }
+        
+        body { background: var(--bg); color: #fff; font-family: -apple-system, system-ui, sans-serif; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
         
         /* Авторизация */
-        .auth-container { display: flex; align-items: center; justify-content: center; height: 100vh; background: #000; }
-        .auth-card { width: 320px; border: 1px solid #333; padding: 35px; text-align: center; background: #050505; border-radius: 8px; box-shadow: 0 0 20px rgba(255,255,255,0.05); }
-        input, textarea, select { width: 100%; box-sizing: border-box; background: #111; border: 1px solid #444; color: #fff; padding: 12px; margin: 8px 0; border-radius: 4px; outline: none; }
-        input:focus { border-color: #fff; }
-        button { cursor: pointer; padding: 12px; text-transform: uppercase; font-weight: bold; width: 100%; border: none; border-radius: 4px; transition: 0.2s; }
-        .btn-white { background: #fff; color: #000; }
-        .btn-outline { background: transparent; color: #888; border: 1px solid #333; margin-top: 10px; }
-
-        /* Приложение */
-        #app { display: none; height: 100%; }
-        .sidebar { width: 260px; border-right: 1px solid #222; padding: 20px; background: #080808; display: flex; flex-direction: column; gap: 10px; }
-        .content { flex: 1; padding: 20px; overflow-y: auto; background: #000; position: relative; }
-
-        /* Шапка профиля */
-        .user-header { display: flex; align-items: center; gap: 12px; padding-bottom: 20px; border-bottom: 1px solid #222; margin-bottom: 15px; }
-        .avatar { width: 42px; height: 42px; background: #222; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; border: 1px solid #444; }
+        .auth-screen { display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; box-sizing: border-box; }
+        .auth-card { width: 100%; max-width: 340px; border: 1px solid var(--border); padding: 30px; background: var(--card); border-radius: 12px; text-align: center; }
         
-        /* Кнопки меню */
-        .nav-btn { background: transparent; color: #aaa; text-align: left; padding: 12px; border-radius: 6px; display: flex; align-items: center; gap: 10px; }
-        .nav-btn:hover, .nav-btn.active { background: #1a1a1a; color: #fff; border-left: 3px solid #fff; }
+        input, select, textarea { width: 100%; padding: 14px; margin: 10px 0; background: #111; border: 1px solid #333; color: #fff; border-radius: 8px; font-size: 16px; box-sizing: border-box; }
+        button { width: 100%; padding: 14px; border-radius: 8px; font-weight: bold; border: none; cursor: pointer; text-transform: uppercase; transition: 0.2s; font-size: 14px; }
+        .btn-main { background: var(--accent); color: #000; }
+        .btn-sec { background: transparent; color: #888; border: 1px solid #333; margin-top: 10px; }
 
+        /* Навигация */
+        #app { display: none; flex-direction: column; min-height: 100vh; }
+        .top-bar { padding: 15px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: #050505; position: sticky; top: 0; z-index: 100; }
+        
         /* Статистика */
-        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 25px; }
-        .stat-card { background: #080808; border: 1px solid #222; padding: 12px; text-align: center; border-radius: 6px; }
-        .stat-num { font-size: 1.4rem; font-weight: bold; display: block; margin-top: 5px; }
-        .gold { color: #ffd700; text-shadow: 0 0 5px rgba(255,215,0,0.2); }
+        .stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; padding: 15px; background: var(--bg); }
+        .stat-box { border: 1px solid var(--border); padding: 12px; border-radius: 8px; text-align: center; background: var(--card); }
+        .stat-val { display: block; font-size: 1.3rem; font-weight: bold; margin-top: 5px; }
 
-        /* Заказы */
-        .filter-row { display: flex; gap: 8px; margin-bottom: 15px; overflow-x: auto; }
-        .chip { background: #111; border: 1px solid #333; color: #777; padding: 6px 14px; border-radius: 20px; font-size: 0.8rem; cursor: pointer; white-space: nowrap; }
-        .chip.active { background: #fff; color: #000; }
+        /* Контент */
+        .main { padding: 15px; flex: 1; padding-bottom: 100px; }
+        .card { background: var(--card); border: 1px solid var(--border); padding: 15px; border-radius: 10px; margin-bottom: 15px; position: relative; }
         
-        .order-card { background: #0a0a0a; border: 1px solid #222; padding: 20px; margin-bottom: 15px; border-radius: 8px; position: relative; }
-        .price-label { position: absolute; top: 15px; right: 15px; color: #ffd700; border: 1px solid #ffd700; padding: 2px 8px; border-radius: 4px; font-weight: bold; }
-        
-        .notes-box { background: #050505; border: 1px dashed #333; padding: 10px; margin: 15px 0; font-size: 0.85rem; color: #999; border-radius: 4px; }
-        
+        /* Роли и Ранги */
+        .role-tag { font-size: 0.7rem; padding: 2px 6px; border-radius: 4px; border: 1px solid #555; text-transform: uppercase; margin-left: 5px; }
+        .role-director { color: #ff00ff; border-color: #ff00ff; }
+        .role-manager { color: #00ff00; border-color: #00ff00; }
+        .role-programmer { color: #0088ff; border-color: #0088ff; }
+
+        /* Нижнее меню */
+        .bottom-nav { position: fixed; bottom: 0; width: 100%; background: #080808; border-top: 1px solid var(--border); display: flex; justify-content: space-around; padding: 12px 0; }
+        .nav-item { background: none; border: none; color: #666; font-size: 0.7rem; display: flex; flex-direction: column; align-items: center; gap: 5px; width: auto; }
+        .nav-item.active { color: #fff; }
+
         /* Уведомления */
-        #toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: #fff; color: #000; padding: 12px 25px; border-radius: 30px; font-weight: bold; display: none; z-index: 9999; box-shadow: 0 5px 20px rgba(0,0,0,0.5); }
-
-        /* Статусы и Ранги */
-        .st-new { color: #00ff00; } .st-work { color: yellow; } .st-done { color: red; }
-        .hot { color: #ff4444; font-weight: bold; animation: blink 1.5s infinite; }
-        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
-
-        .badge { font-size: 0.65rem; padding: 2px 6px; border-radius: 3px; margin-left: 8px; text-transform: uppercase; }
-        .bg-jun { background: #444; } .bg-mid { background: #0055ff; } .bg-sen { background: #ff00ff; }
+        #toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: #fff; color: #000; padding: 12px 24px; border-radius: 50px; font-weight: bold; display: none; z-index: 1000; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
     </style>
 </head>
 <body>
 
     <div id="toast"></div>
 
-    <div id="auth-screen" class="auth-container">
+    <div id="login-screen" class="auth-screen">
         <div class="auth-card">
-            <h1 style="letter-spacing: 5px; margin: 0;">S.A.B.</h1>
-            <p style="color: #555; font-size: 0.7rem; margin-bottom: 25px;">STUDIO MANAGEMENT v9.0</p>
-            <input type="text" id="log-phone" placeholder="Номер (705163333)">
-            <input type="password" id="log-pass" placeholder="Пароль (admin123)">
-            <button class="btn-white" onclick="login()">ВОЙТИ</button>
-            <button class="btn-outline" onclick="toggleAuth(true)">РЕГИСТРАЦИЯ</button>
-            <button onclick="clearSystem()" style="background:none; color:#333; font-size:0.6rem; margin-top:20px;">Сбросить память (Reset)</button>
+            <h1>S.A.B.</h1>
+            <p style="color: #555; font-size: 0.8rem; margin-bottom: 20px;">SYSTEM v10.0</p>
+            <input type="text" id="l-phone" placeholder="705163333">
+            <input type="password" id="l-pass" placeholder="Пароль">
+            <button class="btn-main" onclick="handleLogin()">ВОЙТИ</button>
+            <button class="btn-sec" onclick="showReg(true)">РЕГИСТРАЦИЯ</button>
         </div>
     </div>
 
-    <div id="reg-screen" class="auth-container" style="display:none;">
+    <div id="reg-screen" class="auth-screen" style="display:none;">
         <div class="auth-card">
-            <h2>НОВЫЙ СОТРУДНИК</h2>
-            <input type="text" id="reg-name" placeholder="Имя">
-            <input type="text" id="reg-phone" placeholder="Номер">
-            <input type="password" id="reg-pass" placeholder="Пароль">
-            <button class="btn-white" onclick="register()">СОЗДАТЬ АККАУНТ</button>
-            <button class="btn-outline" onclick="toggleAuth(false)">НАЗАД</button>
+            <h2>РЕГИСТРАЦИЯ</h2>
+            <input type="text" id="r-name" placeholder="Имя">
+            <input type="text" id="r-phone" placeholder="Номер телефона">
+            <input type="password" id="r-pass" placeholder="Придумайте пароль">
+            <button class="btn-main" onclick="handleReg()">СОЗДАТЬ АККАУНТ</button>
+            <button class="btn-sec" onclick="showReg(false)">НАЗАД</button>
         </div>
     </div>
 
     <div id="app">
-        <div class="sidebar">
-            <div class="user-header">
-                <div class="avatar" id="u-ava">?</div>
-                <div>
-                    <div id="u-name" style="font-weight:bold;">Name</div>
-                    <div id="u-role" style="font-size:0.75rem; color:gray;">Role</div>
-                </div>
+        <div class="top-bar">
+            <div>
+                <b id="u-name">Akjol</b> <span class="role-tag role-director" id="u-role">DIRECTOR</span>
             </div>
-            <button class="nav-btn active" id="nav-orders" onclick="showSection('orders')">📁 ЗАКАЗЫ</button>
-            <button class="nav-btn" id="nav-staff" onclick="showSection('staff')">👥 КОМАНДА</button>
-            <button class="nav-btn" id="nav-add" style="display:none; color:#00ff00;" onclick="showSection('add')">+ НОВЫЙ ЗАКАЗ</button>
-            
-            <div style="margin-top:auto;">
-                <button class="nav-btn" onclick="backup()" style="font-size:0.7rem;">💾 СКАЧАТЬ БАЗУ</button>
-                <button class="nav-btn" onclick="location.reload()" style="color:red;">ВЫХОД</button>
-            </div>
+            <button onclick="logout()" style="width:auto; padding:5px 10px; background:none; border:1px solid red; color:red; font-size:0.7rem;">ВЫХОД</button>
         </div>
 
-        <div class="content">
-            <div class="stats-grid">
-                <div class="stat-card">СВОБОДНО <span class="stat-num" id="stat-free">0</span></div>
-                <div class="stat-card">В РАБОТЕ <span class="stat-num" id="stat-work">0</span></div>
-                <div class="stat-card">ЗАКРЫТО <span class="stat-num" id="stat-done">0</span></div>
-                <div class="stat-card" style="border-color:#ffd700;">КАССА <span class="stat-num gold" id="stat-money">0</span></div>
+        <div class="stats">
+            <div class="stat-box">В РАБОТЕ <span class="stat-val" id="stat-work">0</span></div>
+            <div class="stat-box" style="border-color:var(--gold)">КАССА <span class="stat-val" id="stat-money" style="color:var(--gold)">0 с</span></div>
+        </div>
+
+        <div class="main" id="view">
             </div>
-            <div id="view"></div>
+
+        <div class="bottom-nav">
+            <button class="nav-item active" id="n-orders" onclick="switchTab('orders')">📦 ЗАКАЗЫ</button>
+            <button class="nav-item" id="n-add" onclick="switchTab('add')">➕ ДОБАВИТЬ</button>
+            <button class="nav-item" id="n-staff" onclick="switchTab('staff')">👥 КОМАНДА</button>
         </div>
     </div>
 
     <script>
-        /* --- JS LOGIC --- */
-        let DB = JSON.parse(localStorage.getItem('sab_db_v9')) || { 
-            users: [{ name: "Солто", phone: "700000000", pass: "1234", role: "manager", xp: 5 }], 
+        /* --- ЛОГИКА СИСТЕМЫ --- */
+
+        let DB = JSON.parse(localStorage.getItem('sab_db_v10')) || { 
+            users: [
+                { name: "Солто", phone: "700000000", pass: "1234", role: "manager", xp: 0 }
+            ], 
             orders: [] 
         };
-        let user = null;
-        let filter = 'all';
 
-        // 1. АВТОРИЗАЦИЯ
-        function login() {
-            const p = document.getElementById('log-phone').value.trim();
-            const ps = document.getElementById('log-pass').value.trim();
-            if (p === '705163333' && ps === 'admin123') {
-                user = { name: "С.А.Б", phone: p, role: "director", xp: 999 };
+        let me = null;
+
+        // ВХОД
+        function handleLogin() {
+            const ph = document.getElementById('l-phone').value.trim();
+            const ps = document.getElementById('l-pass').value.trim();
+
+            if (ph === '705163333' && ps === 'admin123') {
+                me = { name: "Акжол", phone: "705163333", role: "director" };
                 initApp();
             } else {
-                let found = DB.users.find(u => u.phone === p && u.pass === ps);
-                if (found) { user = found; initApp(); } 
-                else { msg('Ошибка: Неверные данные'); }
+                let user = DB.users.find(u => u.phone === ph && u.pass === ps);
+                if (user) { me = user; initApp(); } 
+                else { notify('Ошибка: Неверный вход'); }
             }
         }
 
-        function register() {
-            const n = document.getElementById('reg-name').value;
-            const p = document.getElementById('reg-phone').value;
-            const ps = document.getElementById('reg-pass').value;
-            if(!n || !p || !ps) return msg('Заполните все поля');
-            if(DB.users.find(u => u.phone === p) || p === '705163333') return msg('Номер уже занят');
+        // РЕГИСТРАЦИЯ
+        function handleReg() {
+            const n = document.getElementById('r-name').value;
+            const p = document.getElementById('r-phone').value;
+            const ps = document.getElementById('r-pass').value;
+            if(!n || !p || !ps) return notify('Заполните все поля');
+
+            if(DB.users.find(u => u.phone === p) || p === '705163333') {
+                return notify('Этот номер уже занят!');
+            }
+
             DB.users.push({ name: n, phone: p, pass: ps, role: "programmer", xp: 0 });
-            save(); msg('Успешно! Теперь войдите.'); toggleAuth(false);
+            save();
+            notify('Аккаунт создан! Войдите.');
+            setTimeout(() => location.reload(), 1000);
         }
 
         function initApp() {
-            document.getElementById('auth-screen').style.display = 'none';
-            document.getElementById('reg-screen').style.display = 'none';
+            document.getElementById('login-screen').style.display = 'none';
             document.getElementById('app').style.display = 'flex';
-            document.getElementById('u-name').innerText = user.name;
-            document.getElementById('u-role').innerText = user.role.toUpperCase();
-            document.getElementById('u-ava').innerText = user.name[0];
-            if(user.role !== 'programmer') document.getElementById('nav-add').style.display = 'flex';
-            updateStats(); showSection('orders');
+            document.getElementById('u-name').innerText = me.name;
+            document.getElementById('u-role').innerText = me.role.toUpperCase();
+            document.getElementById('u-role').className = 'role-tag role-' + me.role;
+            
+            updateStats();
+            switchTab('orders');
         }
 
-        // 2. ЗАКАЗЫ
-        function renderOrders(search = '') {
-            const view = document.getElementById('view');
-            view.innerHTML = `
-                <div class="filter-row">
-                    <button class="chip ${filter==='all'?'active':''}" onclick="setFilter('all')">Все</button>
-                    <button class="chip ${filter==='new'?'active':''}" onclick="setFilter('new')">Свободные</button>
-                    <button class="chip ${filter==='work'?'active':''}" onclick="setFilter('work')">В работе</button>
-                    <button class="chip ${filter==='done'?'active':''}" onclick="setFilter('done')">Готовые</button>
-                </div>
-                <input placeholder="🔍 Поиск по клиенту или описанию..." onkeyup="renderOrders(this.value)" value="${search}">
-            `;
+        // УПРАВЛЕНИЕ ВКЛАДКАМИ
+        function switchTab(tab) {
+            const v = document.getElementById('view');
+            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+            document.getElementById('n-' + tab).classList.add('active');
 
-            let list = DB.orders.filter(o => {
-                let fMatch = (filter === 'all' && o.status !== 'archive') || o.status === filter;
-                let sMatch = o.client.toLowerCase().includes(search.toLowerCase()) || o.desc.toLowerCase().includes(search.toLowerCase());
-                return fMatch && sMatch;
-            });
+            if(tab === 'orders') renderOrders();
+            if(tab === 'add') renderAddForm();
+            if(tab === 'staff') renderStaff();
+        }
 
-            list.forEach((ord, i) => {
-                const realIdx = DB.orders.indexOf(ord);
-                const isLate = (ord.status !== 'done' && ord.date <= new Date().toISOString().split('T')[0]);
-                let notes = (ord.notes || []).map(n => `<div>• ${n}</div>`).join('');
+        // ЗАКАЗЫ
+        function renderOrders() {
+            const v = document.getElementById('view');
+            v.innerHTML = '<h3>Активные проекты</h3>';
+            
+            let orders = DB.orders.filter(o => o.status !== 'archive');
+            if(orders.length === 0) v.innerHTML += '<p style="color:#444">Заказов пока нет</p>';
 
-                view.innerHTML += `
-                    <div class="order-card" style="${isLate?'border-color:red':''}">
-                        <div class="price-label">${ord.price} с</div>
-                        <h3>${ord.client}</h3>
-                        <p style="color:#aaa; font-size:0.9rem;">${ord.desc}</p>
-                        <div class="notes-box">${notes || 'Заметок нет'} <div onclick="addNote(${realIdx})" style="color:#00ff00; cursor:pointer; margin-top:5px; font-size:0.7rem;">+ Добавить заметку</div></div>
-                        <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid #222; padding-top:10px;">
-                            <span class="${isLate?'hot':''}" style="font-size:0.8rem;">📅 ${ord.date}</span>
-                            <div>
-                                ${ord.status === 'new' ? `<button onclick="setSt(${realIdx},'work')" style="background:#00ff00; color:#000; width:auto; padding:5px 10px;">ВЗЯТЬ</button>` : ''}
-                                ${ord.status === 'work' && (ord.worker === user.name || user.role === 'director') ? `<button onclick="setSt(${realIdx},'done')" style="background:yellow; color:#000; width:auto; padding:5px 10px;">ЗАКРЫТЬ</button>` : ''}
-                                ${user.role === 'director' ? `<button onclick="edit(${realIdx})" style="background:none; color:gray; width:auto; font-size:0.7rem;">РЕД.</button> <button onclick="setSt(${realIdx},'archive')" style="background:none; color:red; width:auto; font-size:0.7rem;">УДАЛИТЬ</button>` : ''}
-                            </div>
+            orders.reverse().forEach((o, i) => {
+                let realIdx = DB.orders.indexOf(o);
+                v.innerHTML += `
+                    <div class="card">
+                        <div style="color:var(--gold); font-weight:bold; float:right;">${o.price} с</div>
+                        <b>${o.client}</b>
+                        <p style="font-size:0.8rem; color:#aaa; margin:5px 0;">${o.desc}</p>
+                        <div style="font-size:0.7rem; color:#666;">Дедлайн: ${o.date}</div>
+                        <div style="margin-top:10px; display:flex; gap:10px;">
+                            ${o.status === 'new' ? `<button onclick="setSt(${realIdx},'work')" style="background:#00ff00; color:#000;">ВЗЯТЬ</button>` : ''}
+                            ${o.status === 'work' ? `<button onclick="setSt(${realIdx},'done')" style="background:yellow; color:#000;">ЗАВЕРШИТЬ</button>` : ''}
+                            ${['director','manager'].includes(me.role) ? `<button onclick="setSt(${realIdx},'archive')" style="background:none; border:1px solid red; color:red;">УДАЛИТЬ</button>` : ''}
                         </div>
                     </div>
                 `;
             });
+        }
+
+        function renderAddForm() {
+            if(me.role === 'programmer') return notify('У вас нет прав для создания заказов');
+            document.getElementById('view').innerHTML = `
+                <h3>Новый заказ</h3>
+                <input id="o-client" placeholder="Имя клиента">
+                <input id="o-price" type="number" placeholder="Бюджет (сом)">
+                <textarea id="o-desc" placeholder="Описание задачи (ТЗ)" style="height:100px;"></textarea>
+                <input id="o-date" type="date">
+                <button class="btn-main" onclick="addOrder()">Опубликовать</button>
+            `;
         }
 
         function addOrder() {
-            const c = document.getElementById('o-c').value;
-            const p = document.getElementById('o-p').value;
-            const d = document.getElementById('o-d').value;
-            const dt = document.getElementById('o-dt').value;
-            if(!c || !p || !dt) return msg('Заполните все поля');
-            DB.orders.push({ client: c, price: p, desc: d, date: dt, status: 'new', notes: [], worker: null });
-            save(); updateStats(); msg('Заказ создан!'); showSection('orders');
+            const c = document.getElementById('o-client').value;
+            const p = document.getElementById('o-price').value;
+            const d = document.getElementById('o-desc').value;
+            const dt = document.getElementById('o-date').value;
+            if(!c || !p || !dt) return notify('Заполните все данные');
+
+            DB.orders.push({ client: c, price: p, desc: d, date: dt, status: 'new' });
+            save();
+            updateStats();
+            switchTab('orders');
+            notify('Заказ добавлен!');
         }
 
-        // 3. КОМАНДА
+        // КОМАНДА И ПОВЫШЕНИЕ
         function renderStaff() {
-            const view = document.getElementById('view');
-            view.innerHTML = '<h2>Рейтинг сотрудников</h2>';
-            let sorted = [...DB.users].sort((a,b) => (b.xp||0) - (a.xp||0));
-            sorted.forEach(u => {
-                let rank = u.xp >= 10 ? {n:'Senior', c:'bg-sen'} : (u.xp >= 3 ? {n:'Middle', c:'bg-mid'} : {n:'Junior', c:'bg-jun'});
-                view.innerHTML += `
-                    <div class="order-card" style="display:flex; align-items:center; justify-content:space-between;">
-                        <div style="display:flex; align-items:center; gap:15px;">
-                            <div class="avatar">${u.name[0]}</div>
-                            <div><b>${u.name}</b> <span class="badge ${rank.c}">${rank.n}</span><br><small style="color:gray">${u.role} | XP: ${u.xp||0}</small></div>
-                        </div>
-                        ${user.role === 'director' && u.phone !== '705163333' ? `<button onclick="fire('${u.phone}')" style="background:none; color:red; width:auto;">УВОЛИТЬ</button>` : ''}
+            const v = document.getElementById('view');
+            v.innerHTML = '<h3>Управление командой</h3>';
+            
+            // Список всех пользователей включая админа
+            let allUsers = [...DB.users];
+            
+            allUsers.forEach((u, i) => {
+                let isMe = u.phone === me.phone;
+                v.innerHTML += `
+                    <div class="card">
+                        <b>${u.name}</b> <span class="role-tag role-${u.role}">${u.role.toUpperCase()}</span>
+                        <div style="font-size:0.7rem; color:gray; margin-top:5px;">${u.phone}</div>
+                        
+                        ${me.role === 'director' && !isMe ? `
+                            <div style="margin-top:10px; display:flex; gap:5px;">
+                                <button onclick="changeRole('${u.phone}', 'programmer')" style="font-size:0.6rem; padding:5px; background:#333;">ПРОГ</button>
+                                <button onclick="changeRole('${u.phone}', 'manager')" style="font-size:0.6rem; padding:5px; background:#00ff00; color:#000;">МЕНЕДЖЕР</button>
+                                <button onclick="changeRole('${u.phone}', 'deputy')" style="font-size:0.6rem; padding:5px; background:#ff00ff; color:#fff;">ЗАМ</button>
+                                <button onclick="fireUser('${u.phone}')" style="font-size:0.6rem; padding:5px; background:red; color:#fff;">УВОЛИТЬ</button>
+                            </div>
+                        ` : ''}
                     </div>
                 `;
             });
         }
 
-        // 4. ВСПОМОГАТЕЛЬНЫЕ
+        function changeRole(phone, newRole) {
+            let u = DB.users.find(user => user.phone === phone);
+            if(u) {
+                u.role = newRole;
+                save();
+                renderStaff();
+                notify('Роль изменена на ' + newRole.toUpperCase());
+            }
+        }
+
+        // СИСТЕМНЫЕ ФУНКЦИИ
         function setSt(i, st) {
             DB.orders[i].status = st;
-            if(st === 'work') DB.orders[i].worker = user.name;
-            if(st === 'done') {
-                let w = DB.users.find(u => u.name === DB.orders[i].worker);
-                if(w) w.xp = (w.xp || 0) + 1;
-            }
-            save(); updateStats(); renderOrders(); msg('Обновлено');
+            save();
+            updateStats();
+            renderOrders();
+            notify('Статус обновлен');
         }
 
-        function addNote(i) {
-            let n = prompt("Текст заметки:");
-            if(n) { DB.orders[i].notes.push(n); save(); renderOrders(); }
-        }
-
-        function edit(i) {
-            let p = prompt("Новая цена:", DB.orders[i].price);
-            let d = prompt("Новое описание:", DB.orders[i].desc);
-            if(p && d) { DB.orders[i].price = p; DB.orders[i].desc = d; save(); renderOrders(); }
-        }
-
-        function save() { localStorage.setItem('sab_db_v9', JSON.stringify(DB)); }
+        function save() { localStorage.setItem('sab_db_v10', JSON.stringify(DB)); }
         
         function updateStats() {
-            document.getElementById('stat-free').innerText = DB.orders.filter(o => o.status === 'new').length;
-            document.getElementById('stat-work').innerText = DB.orders.filter(o => o.status === 'work').length;
-            document.getElementById('stat-done').innerText = DB.orders.filter(o => o.status === 'done').length;
-            let m = DB.orders.filter(o => o.status === 'done').reduce((a, b) => a + Number(b.price), 0);
-            document.getElementById('stat-money').innerText = m + ' c';
+            const work = DB.orders.filter(o => o.status === 'work').length;
+            const money = DB.orders.filter(o => o.status === 'done').reduce((acc, v) => acc + Number(v.price), 0);
+            document.getElementById('stat-work').innerText = work;
+            document.getElementById('stat-money').innerText = money + ' с';
         }
 
-        function showSection(s) {
-            const view = document.getElementById('view');
-            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-            if(s === 'orders') { renderOrders(); document.getElementById('nav-orders').classList.add('active'); }
-            if(s === 'staff') { renderStaff(); document.getElementById('nav-staff').classList.add('active'); }
-            if(s === 'add') {
-                document.getElementById('nav-add').classList.add('active');
-                view.innerHTML = `<h3>Новый проект</h3><input id="o-c" placeholder="Клиент"><input id="o-p" type="number" placeholder="Бюджет (сом)"><textarea id="o-d" placeholder="Описание/ТЗ"></textarea><input id="o-dt" type="date"><button class="btn-white" onclick="addOrder()">Создать заказ</button>`;
-            }
-        }
-
-        function msg(m) {
+        function notify(m) {
             const t = document.getElementById('toast');
             t.innerText = m; t.style.display = 'block';
             setTimeout(() => t.style.display = 'none', 2500);
         }
 
-        function toggleAuth(reg) {
-            document.getElementById('auth-screen').style.display = reg ? 'none' : 'flex';
-            document.getElementById('reg-screen').style.display = reg ? 'flex' : 'none';
+        function fireUser(ph) {
+            if(confirm('Уволить этого сотрудника?')) {
+                DB.users = DB.users.filter(u => u.phone !== ph);
+                save();
+                renderStaff();
+                notify('Сотрудник уволен');
+            }
         }
 
-        function setFilter(f) { filter = f; renderOrders(); }
-        function fire(ph) { if(confirm('Уволить?')) { DB.users = DB.users.filter(u => u.phone !== ph); save(); renderStaff(); } }
-        function clearSystem() { if(confirm('Это удалит ВСЕ данные. Вы уверены?')) { localStorage.clear(); location.reload(); } }
-        function backup() {
-            let data = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(DB));
-            let a = document.createElement('a'); a.href = data; a.download = "sab_backup.json"; a.click();
+        function showReg(show) {
+            document.getElementById('login-screen').style.display = show ? 'none' : 'flex';
+            document.getElementById('reg-screen').style.display = show ? 'flex' : 'none';
         }
+
+        function logout() { location.reload(); }
+
     </script>
 </body>
 </html>
