@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>S.A.B. Management System</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div id="login-screen" class="login-container">
+        <h1>S.A.B. СТУДИЯ</h1>
+        <p>Вход в систему</p>
+        <input type="text" id="phone-input" placeholder="Номер телефона (например: 705163333)">
+        <input type="password" id="pass-input" placeholder="Пароль">
+        <button onclick="handleLogin()" style="width: 100%; background: white; color: black; font-weight: bold; margin-top: 10px;">ВОЙТИ</button>
+        
+        <hr style="margin: 20px 0; border: 0.5px solid #333;">
+        
+        <p style="font-size: 0.8rem;">Регистрация нового сотрудника</p>
+        <input type="text" id="reg-name" placeholder="Ваше Имя">
+        <input type="text" id="reg-phone" placeholder="Номер телефона">
+        <input type="password" id="reg-pass" placeholder="Придумайте пароль">
+        <button onclick="handleRegister()" style="width: 100%; border: 1px solid white; background: transparent; color: white;">ЗАРЕГИСТРИРОВАТЬСЯ</button>
+    </div>
+
+    <div id="app" style="display: none; width: 100%; height: 100vh; display: flex;">
+        </div>
+
+    <script src="app.js"></script>
+    
+    <script>
+        // Небольшой скрипт для управления экранами
+        function handleLogin() {
+            const phone = document.getElementById('phone-input').value;
+            const pass = document.getElementById('pass-input').value;
+            
+            // Вызываем функцию из app.js
+            login(phone, pass);
+            
+            if (localStorage.getItem('user')) {
+                document.getElementById('login-screen').style.display = 'none';
+                document.getElementById('app').style.display = 'flex';
+                renderDashboard();
+            }
+        }
+
+        function handleRegister() {
+            const name = document.getElementById('reg-name').value;
+            const phone = document.getElementById('reg-phone').value;
+            const pass = document.getElementById('reg-pass').value;
+
+            // В реальной базе Firebase это будет проверяться на сервере
+            // Здесь мы создаем логику: если номер уже есть в нашей локальной базе
+            let users = JSON.parse(localStorage.getItem('users_db') || '[]');
+            
+            if (users.find(u => u.phone === phone) || phone === "705163333") {
+                alert("ОШИБКА: Пользователь с таким номером уже существует!");
+            } else {
+                users.push({name, phone, pass, role: 'programmer'}); // По умолчанию новый — программист
+                localStorage.setItem('users_db', JSON.stringify(users));
+                alert("Успешная регистрация! Теперь войдите.");
+            }
+        }
+    </script>
+</body>
+</html>
+
