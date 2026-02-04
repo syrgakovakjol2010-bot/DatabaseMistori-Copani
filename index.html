@@ -3,422 +3,348 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>M.C. SYSTEM | v25.0</title>
+    <title>M.C. SYSTEM | v30.0</title>
     <style>
-        /* =========================================
-           1. НАСТРОЙКИ ДИЗАЙНА (CSS)
-           ========================================= */
+        /* --- 1. СТИЛИ (DESIGN) --- */
         :root {
             --bg: #000000;
-            --sidebar: #050505;
-            --card: #0a0a0a;
-            --border: #1f1f1f;
-            --text: #ffffff;
-            --text-gray: #888888;
+            --card: #0f0f0f;
+            --border: #222;
+            --text: #fff;
+            --gray: #888;
+            --accent: #fff;
             --gold: #FFD700;
             --green: #00FF88;
             --red: #FF4444;
             --blue: #0088FF;
-            --purple: #9D00FF;
         }
 
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
+        * { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; }
+        body { background: var(--bg); color: var(--text); font-family: sans-serif; margin: 0; padding: 0; height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
+
+        /* Вход */
+        #auth-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 5000; display: flex; align-items: center; justify-content: center; padding: 20px; }
+        .auth-box { width: 100%; max-width: 350px; background: var(--card); border: 1px solid var(--border); padding: 40px 30px; border-radius: 20px; text-align: center; }
+        .auth-title { font-size: 3rem; font-weight: 900; letter-spacing: 5px; margin: 0; }
         
-        body {
-            background-color: var(--bg);
-            color: var(--text);
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            margin: 0; padding: 0;
-            height: 100vh; overflow: hidden;
-            display: flex; flex-direction: column;
-        }
+        input, textarea { width: 100%; padding: 15px; margin: 10px 0; background: #1a1a1a; border: 1px solid #333; color: #fff; border-radius: 10px; font-size: 16px; }
+        button { width: 100%; padding: 15px; border-radius: 10px; font-weight: bold; border: none; cursor: pointer; text-transform: uppercase; margin-top: 10px; font-size: 14px; }
+        .btn-main { background: #fff; color: #000; }
+        .btn-sec { background: transparent; color: #666; border: 1px solid #333; }
+        .btn-danger { color: red; background: rgba(255,0,0,0.1); margin-top: 30px; font-size: 0.7rem; }
 
-        /* --- ЗАСТАВКА (SPLASH) --- */
-        #splash {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #000; z-index: 9999;
-            display: flex; align-items: center; justify-content: center;
-            flex-direction: column; transition: opacity 0.5s;
-        }
-        .loader {
-            width: 40px; height: 40px; border: 4px solid #333;
-            border-top: 4px solid var(--text); border-radius: 50%;
-            animation: spin 1s linear infinite; margin-bottom: 20px;
-        }
-        @keyframes spin { 100% { transform: rotate(360deg); } }
-
-        /* --- ЭКРАНЫ ВХОДА --- */
-        #auth-container {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #000; z-index: 5000;
-            display: flex; align-items: center; justify-content: center; padding: 20px;
-        }
-        .auth-box {
-            width: 100%; max-width: 360px; background: var(--card);
-            border: 1px solid var(--border); padding: 40px 30px;
-            border-radius: 20px; text-align: center;
-        }
-        .auth-title { font-size: 2.5rem; font-weight: 900; letter-spacing: 5px; margin: 0; }
-        .auth-sub { color: var(--text-gray); font-size: 0.7rem; text-transform: uppercase; margin-bottom: 30px; letter-spacing: 2px; }
-
-        input, textarea, select {
-            width: 100%; padding: 15px; margin: 8px 0; background: #111;
-            border: 1px solid #333; color: #fff; border-radius: 12px; font-size: 16px;
-        }
-        input:focus { border-color: #fff; }
-
-        .btn {
-            width: 100%; padding: 15px; margin-top: 10px; border-radius: 12px;
-            font-weight: bold; border: none; cursor: pointer; text-transform: uppercase;
-            font-size: 14px; transition: 0.2s;
-        }
-        .btn-primary { background: #fff; color: #000; }
-        .btn-outline { background: transparent; border: 1px solid #333; color: var(--text-gray); }
-        .btn-danger { background: rgba(255,0,0,0.1); color: var(--red); margin-top: 30px; font-size: 0.7rem; }
-
-        /* --- ОСНОВНОЙ ИНТЕРФЕЙС --- */
-        #app-layout { display: none; height: 100%; width: 100%; }
-
+        /* Интерфейс */
+        #app-screen { display: none; height: 100%; width: 100%; }
+        
         /* Сайдбар (ПК) */
-        .sidebar {
-            width: 280px; background: var(--sidebar); border-right: 1px solid var(--border);
-            display: flex; flex-direction: column; padding: 30px;
-        }
-        .brand { font-size: 1.5rem; font-weight: 900; letter-spacing: 3px; margin-bottom: 40px; }
-        .menu-list { display: flex; flex-direction: column; gap: 10px; flex: 1; }
-        .menu-btn {
-            background: transparent; border: none; color: var(--text-gray);
-            padding: 12px; text-align: left; font-size: 0.9rem; font-weight: 600;
-            cursor: pointer; border-radius: 10px; transition: 0.2s;
-        }
-        .menu-btn.active, .menu-btn:hover { background: #111; color: #fff; }
-        
-        /* Контент */
-        .main-area { flex: 1; display: flex; flex-direction: column; position: relative; }
-        .top-header {
-            padding: 15px 20px; border-bottom: 1px solid var(--border);
-            display: flex; justify-content: space-between; align-items: center;
-            background: rgba(0,0,0,0.8); backdrop-filter: blur(10px);
-        }
-        .user-info b { display: block; font-size: 0.9rem; }
-        .user-info span { font-size: 0.6rem; color: var(--green); text-transform: uppercase; }
-        
-        .content-scroll { flex: 1; overflow-y: auto; padding: 20px; padding-bottom: 100px; }
+        .sidebar { width: 280px; background: #050505; border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 30px; }
+        .nav-btn { background: transparent; color: #888; text-align: left; padding: 15px; margin-bottom: 5px; border-radius: 10px; transition: 0.2s; }
+        .nav-btn.active, .nav-btn:hover { background: #151515; color: #fff; }
 
-        /* Нижнее меню (Телефон) */
-        .mobile-nav {
-            display: none; position: fixed; bottom: 0; width: 100%;
-            background: #080808; border-top: 1px solid var(--border);
-            justify-content: space-around; padding: 12px 0; z-index: 1000;
-        }
-        .mob-btn {
-            background: none; border: none; color: #555;
-            font-size: 0.6rem; font-weight: bold; display: flex;
-            flex-direction: column; align-items: center; gap: 4px;
-        }
+        /* Контент */
+        .main-content { flex: 1; display: flex; flex-direction: column; position: relative; }
+        .top-bar { height: 70px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; padding: 0 20px; background: rgba(0,0,0,0.8); }
+        .scroll-area { flex: 1; overflow-y: auto; padding: 20px; padding-bottom: 100px; }
+
+        /* Элементы */
+        .card { background: var(--card); border: 1px solid var(--border); padding: 20px; border-radius: 15px; margin-bottom: 15px; position: relative; }
+        .price { position: absolute; top: 20px; right: 20px; color: var(--gold); border: 1px solid var(--gold); padding: 3px 8px; border-radius: 5px; font-weight: bold; }
+        
+        .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
+        .stat-box { background: var(--card); border: 1px solid var(--border); padding: 15px; text-align: center; border-radius: 10px; }
+        .stat-num { display: block; font-size: 1.5rem; font-weight: bold; margin-top: 5px; }
+
+        /* Нижнее меню (Мобильное) */
+        .mobile-nav { display: none; position: fixed; bottom: 0; width: 100%; background: #080808; border-top: 1px solid var(--border); justify-content: space-around; padding: 10px 0; z-index: 1000; }
+        .mob-btn { background: none; border: none; color: #555; font-size: 0.6rem; font-weight: bold; display: flex; flex-direction: column; align-items: center; gap: 4px; }
         .mob-btn.active { color: #fff; }
 
-        /* --- КАРТОЧКИ И ЭЛЕМЕНТЫ --- */
-        .card {
-            background: var(--card); border: 1px solid var(--border);
-            padding: 20px; border-radius: 16px; margin-bottom: 15px; position: relative;
-        }
-        .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 20px; }
-        .stat-box { background: var(--card); border: 1px solid var(--border); padding: 15px; border-radius: 12px; text-align: center; }
-        .stat-num { font-size: 1.5rem; font-weight: 900; display: block; margin-top: 5px; }
-        
-        .price-tag {
-            position: absolute; top: 20px; right: 20px; color: var(--gold);
-            font-weight: bold; border: 1px solid var(--gold);
-            padding: 4px 8px; border-radius: 6px; font-size: 0.8rem;
-        }
-        
-        .status-badge {
-            display: inline-block; padding: 4px 8px; border-radius: 4px;
-            font-size: 0.65rem; text-transform: uppercase; font-weight: bold;
-            border: 1px solid #333; margin-top: 10px;
-        }
-        
-        /* ЧАТ */
-        .chat-wrap { display: flex; flex-direction: column; height: 100%; }
-        .chat-msgs { flex: 1; overflow-y: auto; padding: 10px; display: flex; flex-direction: column; gap: 10px; }
-        .msg { max-width: 80%; padding: 10px 14px; border-radius: 12px; font-size: 0.9rem; }
-        .msg-me { align-self: flex-end; background: #fff; color: #000; border-bottom-right-radius: 2px; }
-        .msg-other { align-self: flex-start; background: #1a1a1a; border: 1px solid #333; border-bottom-left-radius: 2px; }
-        .msg-info { font-size: 0.6rem; opacity: 0.6; margin-bottom: 2px; }
-        .chat-input { display: flex; padding: 10px; border-top: 1px solid var(--border); gap: 10px; }
-
         /* Адаптивность */
-        @media (max-width: 900px) {
-            .sidebar { display: none; }
-            .mobile-nav { display: flex; }
-        }
+        @media (max-width: 900px) { .sidebar { display: none; } .mobile-nav { display: flex; } }
 
+        /* Утилиты */
         .hidden { display: none !important; }
+        #toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: #fff; color: #000; padding: 10px 20px; border-radius: 30px; font-weight: bold; display: none; z-index: 9999; }
         
-        /* Уведомление */
-        #toast {
-            position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
-            background: #fff; color: #000; padding: 10px 20px; border-radius: 30px;
-            font-weight: bold; z-index: 9999; display: none; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-        }
+        .status-badge { display: inline-block; padding: 4px 8px; border-radius: 4px; font-size: 0.6rem; text-transform: uppercase; border: 1px solid #333; margin-top: 10px; }
+        .s-new { color: var(--green); border-color: var(--green); }
+        .s-work { color: var(--blue); border-color: var(--blue); }
+        .s-done { color: #fff; opacity: 0.5; }
     </style>
 </head>
 <body>
 
-    <div id="splash">
-        <div class="loader"></div>
-        <div class="auth-title" style="font-size:1.5rem;">MISTORI COPANI</div>
-    </div>
-
     <div id="toast">Сообщение</div>
 
-    <div id="auth-container">
-        <div class="auth-box" id="login-block">
+    <div id="auth-screen">
+        <div class="auth-box" id="login-box">
             <h1 class="auth-title">M.C.</h1>
-            <p class="auth-sub">BOSS SYSTEM v25</p>
-            <input type="text" id="l-phone" placeholder="705 163 333">
-            <input type="password" id="l-pass" placeholder="Пароль">
-            <button class="btn btn-primary" onclick="authLogin()">ВОЙТИ</button>
-            <button class="btn btn-outline" onclick="toggleAuth(true)">РЕГИСТРАЦИЯ</button>
-            <button class="btn btn-danger" onclick="hardReset()">СБРОСИТЬ ВСЕ ДАННЫЕ</button>
+            <p style="color:#666; letter-spacing:2px; font-size:0.7rem;">SYSTEM v30.0</p>
+            <input type="text" id="ph" placeholder="Номер (705 163 333)">
+            <input type="password" id="ps" placeholder="Пароль">
+            <button class="btn-main" onclick="auth()">ВОЙТИ</button>
+            <button class="btn-sec" onclick="toggleReg(true)">РЕГИСТРАЦИЯ</button>
+            <button class="btn-danger" onclick="hardReset()">СБРОС СИСТЕМЫ</button>
         </div>
 
-        <div class="auth-box hidden" id="reg-block">
-            <h2>НОВЫЙ ID</h2>
-            <input type="text" id="r-name" placeholder="Имя сотрудника">
-            <input type="text" id="r-phone" placeholder="Номер телефона">
-            <input type="password" id="r-pass" placeholder="Придумайте пароль">
-            <button class="btn btn-primary" onclick="authRegister()">СОЗДАТЬ</button>
-            <button class="btn btn-outline" onclick="toggleAuth(false)">НАЗАД</button>
+        <div class="auth-box hidden" id="reg-box">
+            <h2>НОВЫЙ СОТРУДНИК</h2>
+            <input type="text" id="r-name" placeholder="Имя">
+            <input type="text" id="r-ph" placeholder="Номер">
+            <input type="password" id="r-ps" placeholder="Пароль">
+            <button class="btn-main" onclick="reg()">СОЗДАТЬ</button>
+            <button class="btn-sec" onclick="toggleReg(false)">НАЗАД</button>
         </div>
     </div>
 
-    <div id="app-layout">
+    <div id="app-screen">
         <div class="sidebar">
-            <div class="brand">MISTORI</div>
-            <div class="menu-list">
-                <button class="menu-btn active" id="d-orders" onclick="nav('orders')">📦 ЗАКАЗЫ</button>
-                <button class="menu-btn" id="d-chat" onclick="nav('chat')">💬 ЧАТ</button>
-                <button class="menu-btn" id="d-team" onclick="nav('team')">👥 КОМАНДА</button>
-                <button class="menu-btn" id="d-add" onclick="nav('add')">➕ СОЗДАТЬ</button>
-                <button class="menu-btn" id="d-fin" onclick="nav('fin')">📊 КАССА</button>
-            </div>
-            <button class="menu-btn" style="color:var(--red)" onclick="location.reload()">ВЫХОД</button>
+            <h2 style="margin-bottom:40px; letter-spacing:3px;">MISTORI</h2>
+            <button class="nav-btn active" id="d-orders" onclick="nav('orders')">📦 ЗАКАЗЫ</button>
+            <button class="nav-btn" id="d-add" onclick="nav('add')">➕ НОВЫЙ</button>
+            <button class="nav-btn" id="d-team" onclick="nav('team')">👥 КОМАНДА</button>
+            <button class="nav-btn" id="d-fin" onclick="nav('fin')">📊 КАССА</button>
+            <button class="nav-btn" style="color:var(--red); margin-top:auto;" onclick="location.reload()">ВЫХОД</button>
         </div>
 
-        <div class="main-area">
-            <div class="top-header">
-                <div class="user-info">
-                    <b id="u-name">Имя</b>
-                    <span id="u-role">РОЛЬ</span>
+        <div class="main-content">
+            <div class="top-bar">
+                <div>
+                    <b id="u-name">Akjol</b> <br>
+                    <small id="u-role" style="color:var(--green); font-size:0.6rem;">DIRECTOR</small>
                 </div>
-                <div style="font-weight:900; opacity:0.3; letter-spacing:2px;">M.C.</div>
+                <div style="font-weight:900; opacity:0.3;">M.C.</div>
             </div>
 
-            <div class="content-scroll" id="view-container">
+            <div class="scroll-area" id="view">
                 </div>
         </div>
 
         <div class="mobile-nav">
             <button class="mob-btn active" id="m-orders" onclick="nav('orders')">📦<br>ЗАКАЗЫ</button>
-            <button class="mob-btn" id="m-chat" onclick="nav('chat')">💬<br>ЧАТ</button>
-            <button class="mob-btn" id="m-team" onclick="nav('team')">👥<br>ЛЮДИ</button>
             <button class="mob-btn" id="m-add" onclick="nav('add')">➕<br>НОВЫЙ</button>
+            <button class="mob-btn" id="m-team" onclick="nav('team')">👥<br>ЛЮДИ</button>
             <button class="mob-btn" id="m-fin" onclick="nav('fin')">📊<br>КАССА</button>
         </div>
     </div>
 
     <script>
-        // --- БАЗА ДАННЫХ ---
-        const DB_NAME = 'mc_boss_v25';
-        let DB = JSON.parse(localStorage.getItem(DB_NAME)) || {
-            users: [
-                { name: "Сезим", phone: "777800603", pass: "admin2", role: "manager", xp: 5, warns: 0 }
-            ],
-            orders: [],
-            chat: [
-                { user: "System", text: "Система запущена. Добро пожаловать в Mistori Copani!", role: "system", time: "00:00" }
-            ]
-        };
+        // --- БАЗА ДАННЫХ (КЛЮЧЕВОЙ МОМЕНТ) ---
+        const DB_KEY = 'mc_final_v30';
+        let DB;
+        let USER = null;
 
-        let me = null; // Текущий пользователь
+        // Инициализация при старте
+        try {
+            const raw = localStorage.getItem(DB_KEY);
+            if (raw) {
+                DB = JSON.parse(raw);
+            } else {
+                initDB(); // Создаем новую если нет
+            }
+        } catch (e) {
+            initDB(); // Если ошибка - создаем новую
+        }
 
-        // --- ИНИЦИАЛИЗАЦИЯ ---
-        window.onload = () => {
-            setTimeout(() => {
-                document.getElementById('splash').style.opacity = '0';
-                setTimeout(() => document.getElementById('splash').style.display = 'none', 500);
-            }, 1000);
-        };
+        function initDB() {
+            DB = {
+                users: [
+                    { name: "Сезим", phone: "777800603", pass: "admin2", role: "manager", xp: 5, warns: 0 }
+                ],
+                orders: []
+            };
+            save();
+        }
 
         // --- АВТОРИЗАЦИЯ ---
-        function authLogin() {
-            const p = document.getElementById('l-phone').value.trim();
-            const s = document.getElementById('l-pass').value.trim();
+        function auth() {
+            const p = document.getElementById('ph').value.trim();
+            const s = document.getElementById('ps').value.trim();
 
             if (p === '705163333' && s === 'admin123') {
-                me = { name: "Акжол", phone: p, role: "director", xp: 9999, warns: 0 };
-                openApp();
+                USER = { name: "Акжол", phone: p, role: "director", xp: 999 };
+                start();
             } else {
-                let user = DB.users.find(u => u.phone === p && u.pass === s);
-                if (user) { me = user; openApp(); } 
-                else { showToast('Неверные данные!'); }
+                let u = DB.users.find(x => x.phone === p && x.pass === s);
+                if (u) { USER = u; start(); } else { msg('Неверные данные'); }
             }
         }
 
-        function authRegister() {
-            const n = document.getElementById('r-name').value.trim();
-            const p = document.getElementById('r-phone').value.trim();
-            const s = document.getElementById('r-pass').value.trim();
-
-            if (!n || !p || !s) return showToast('Заполните все поля');
-            if (DB.users.find(u => u.phone === p) || p === '705163333') return showToast('Номер занят');
+        function reg() {
+            const n = document.getElementById('r-name').value;
+            const p = document.getElementById('r-ph').value;
+            const s = document.getElementById('r-ps').value;
+            
+            if(!n || !p || !s) return msg('Заполните все поля');
+            if(DB.users.find(u => u.phone === p) || p === '705163333') return msg('Номер занят');
 
             DB.users.push({ name: n, phone: p, pass: s, role: "programmer", xp: 0, warns: 0 });
-            saveData();
-            showToast('Аккаунт создан! Войдите.');
-            toggleAuth(false);
+            save();
+            msg('Успешно! Войдите.');
+            toggleReg(false);
         }
 
-        function openApp() {
-            document.getElementById('auth-container').style.display = 'none';
-            document.getElementById('app-layout').style.display = 'flex';
-            document.getElementById('u-name').innerText = me.name;
-            document.getElementById('u-role').innerText = me.role;
+        function start() {
+            document.getElementById('auth-screen').style.display = 'none';
+            document.getElementById('app-screen').style.display = 'flex';
+            document.getElementById('u-name').innerText = USER.name;
+            document.getElementById('u-role').innerText = USER.role.toUpperCase();
             nav('orders');
         }
 
-        function toggleAuth(showReg) {
-            document.getElementById('login-block').classList.toggle('hidden', showReg);
-            document.getElementById('reg-block').classList.toggle('hidden', !showReg);
-        }
-
         // --- НАВИГАЦИЯ ---
-        function nav(screen) {
-            const container = document.getElementById('view-container');
-            
-            // Сброс активных кнопок
-            document.querySelectorAll('.menu-btn, .mob-btn').forEach(b => b.classList.remove('active'));
-            if(document.getElementById('d-'+screen)) document.getElementById('d-'+screen).classList.add('active');
-            if(document.getElementById('m-'+screen)) document.getElementById('m-'+screen).classList.add('active');
+        function nav(tab) {
+            const view = document.getElementById('view');
+            // Сброс классов кнопок
+            document.querySelectorAll('.nav-btn, .mob-btn').forEach(b => b.classList.remove('active'));
+            if(document.getElementById('d-'+tab)) document.getElementById('d-'+tab).classList.add('active');
+            if(document.getElementById('m-'+tab)) document.getElementById('m-'+tab).classList.add('active');
 
-            if (screen === 'orders') renderOrders(container);
-            if (screen === 'chat') renderChat(container);
-            if (screen === 'team') renderTeam(container);
-            if (screen === 'add') renderAdd(container);
-            if (screen === 'fin') renderFin(container);
+            if(tab === 'orders') renderOrders(view);
+            if(tab === 'add') renderAdd(view);
+            if(tab === 'team') renderTeam(view);
+            if(tab === 'fin') renderFin(view);
         }
 
-        // --- ЭКРАН: ЗАКАЗЫ ---
-        function renderOrders(container) {
+        // --- ЭКРАН 1: ЗАКАЗЫ ---
+        function renderOrders(el) {
             const active = DB.orders.filter(o => o.status === 'work').length;
-            const cash = DB.orders.filter(o => o.status === 'done').reduce((a,b) => a + Number(b.price), 0);
+            const profit = DB.orders.filter(o => o.status === 'done').reduce((a,b) => a + Number(b.price), 0);
 
             let html = `
                 <div class="stat-grid">
                     <div class="stat-box"><small>В РАБОТЕ</small><span class="stat-num">${active}</span></div>
-                    <div class="stat-box" style="border-color:var(--gold)"><small>ПРИБЫЛЬ</small><span class="stat-num" style="color:var(--gold)">${cash} с</span></div>
+                    <div class="stat-box" style="border-color:var(--gold)"><small>ПРИБЫЛЬ</small><span class="stat-num" style="color:var(--gold)">${profit} с</span></div>
                 </div>
-                <h3>ПРОЕКТЫ</h3>
+                <h3>АКТИВНЫЕ ПРОЕКТЫ</h3>
             `;
 
-            const list = DB.orders.filter(o => o.status !== 'archive').reverse();
-            if (list.length === 0) html += `<p style="text-align:center; color:#444; margin-top:50px;">Нет заказов</p>`;
+            let list = DB.orders.filter(o => o.status !== 'archive').reverse();
+            if(list.length === 0) html += `<p style="text-align:center; color:#444; margin-top:50px;">Нет заказов</p>`;
 
-            list.forEach((o) => {
+            list.forEach(o => {
                 let idx = DB.orders.indexOf(o);
-                let statusColor = o.status === 'work' ? 'var(--blue)' : (o.status === 'done' ? '#fff' : 'var(--green)');
-                if (o.status === 'reject') statusColor = 'var(--red)';
-
                 html += `
-                    <div class="card" style="${o.status==='reject' ? 'opacity:0.5' : ''}">
-                        <span class="price-tag">${o.price} с</span>
-                        <div style="font-size:1.1rem; font-weight:bold; margin-bottom:5px;">${o.client}</div>
-                        <div style="font-size:0.9rem; color:#aaa; margin-bottom:10px;">${o.desc}</div>
-                        ${o.ref ? `<div style="background:#111; padding:8px; border-radius:6px; font-size:0.8rem; color:var(--blue); margin-bottom:10px;">🔗 ${o.ref}</div>` : ''}
+                    <div class="card" style="${o.status==='reject' ? 'opacity:0.5; border-color:red' : ''}">
+                        <div class="price">${o.price} с</div>
+                        <h3>${o.client}</h3>
+                        <p style="color:#aaa; font-size:0.9rem;">${o.desc}</p>
+                        ${o.ref ? `<div style="padding:10px; background:#111; margin:10px 0; border-radius:5px; font-size:0.8rem; color:var(--blue);">🔗 ${o.ref}</div>` : ''}
                         
-                        <div style="display:flex; justify-content:space-between; align-items:center;">
-                            <span class="status-badge" style="color:${statusColor}; border-color:${statusColor}">${o.status}</span>
-                            <small style="color:#555">${o.date}</small>
-                        </div>
-
-                        <div style="display:flex; gap:10px; margin-top:15px; flex-wrap:wrap;">
-                            ${o.status === 'new' ? `<button class="btn btn-primary" style="padding:10px; flex:1;" onclick="setStatus(${idx}, 'work')">ВЗЯТЬ</button>` : ''}
-                            ${o.status === 'work' ? `<button class="btn btn-primary" style="background:var(--gold); padding:10px; flex:1;" onclick="setStatus(${idx}, 'done')">ЗАВЕРШИТЬ</button>` : ''}
-                            ${['director','manager'].includes(me.role) ? `<button class="btn btn-outline" style="padding:10px; color:var(--red);" onclick="setStatus(${idx}, 'reject')">ОТКАЗ</button>` : ''}
-                            ${me.role === 'director' ? `<button class="btn btn-outline" style="padding:10px;" onclick="setStatus(${idx}, 'archive')">УДАЛИТЬ</button>` : ''}
+                        <div class="status-badge s-${o.status}">${o.status}</div>
+                        
+                        <div style="margin-top:15px; display:flex; gap:10px;">
+                            ${o.status === 'new' ? `<button onclick="setStatus(${idx},'work')" class="btn-main" style="padding:10px; width:auto; border-radius:8px;">ВЗЯТЬ</button>` : ''}
+                            ${o.status === 'work' ? `<button onclick="setStatus(${idx},'done')" class="btn-main" style="background:var(--gold); padding:10px; width:auto; border-radius:8px;">ГОТОВО</button>` : ''}
+                            ${['director','manager'].includes(USER.role) ? `<button onclick="setStatus(${idx},'reject')" style="background:none; border:1px solid red; color:red; padding:10px; border-radius:8px;">ОТКАЗ</button>` : ''}
+                            ${USER.role === 'director' ? `<button onclick="setStatus(${idx},'archive')" style="background:none; color:#444; border:none;">DEL</button>` : ''}
                         </div>
                     </div>
                 `;
             });
-            container.innerHTML = html;
+            el.innerHTML = html;
         }
 
-        // --- ЭКРАН: ЧАТ ---
-        function renderChat(container) {
-            container.innerHTML = `
-                <div class="chat-wrap">
-                    <div class="chat-msgs" id="chat-feed"></div>
-                    <div class="chat-input">
-                        <input id="msg-text" placeholder="Сообщение..." style="margin:0;">
-                        <button class="btn btn-primary" style="width:60px; margin:0;" onclick="sendMsg()">></button>
-                    </div>
+        // --- ЭКРАН 2: НОВЫЙ ---
+        function renderAdd(el) {
+            if(USER.role === 'programmer') {
+                el.innerHTML = '<h3 style="text-align:center; margin-top:50px; color:#444;">НЕТ ДОСТУПА</h3>';
+                return;
+            }
+            el.innerHTML = `
+                <h3>НОВЫЙ ЗАКАЗ</h3>
+                <div class="card">
+                    <input id="in-c" placeholder="Имя клиента">
+                    <input id="in-p" type="number" placeholder="Цена (сом)">
+                    <textarea id="in-d" placeholder="Описание / ТЗ" style="height:100px;"></textarea>
+                    <textarea id="in-r" placeholder="Ссылки на референсы" style="height:60px;"></textarea>
+                    <button class="btn-main" onclick="addOrder()">ОПУБЛИКОВАТЬ</button>
                 </div>
             `;
-            updateChatFeed();
         }
 
-        function updateChatFeed() {
-            const feed = document.getElementById('chat-feed');
-            if(!feed) return;
-            feed.innerHTML = '';
+        function addOrder() {
+            const c = document.getElementById('in-c').value;
+            const p = document.getElementById('in-p').value;
+            const d = document.getElementById('in-d').value;
+            const r = document.getElementById('in-r').value;
+            if(!c || !p) return msg('Заполните поля!');
             
-            DB.chat.forEach((m, i) => {
-                let isMe = m.user === me.name;
-                feed.innerHTML += `
-                    <div class="msg ${isMe ? 'msg-me' : 'msg-other'}">
-                        <div class="msg-info">${m.user} (${m.role}) ${m.time}</div>
-                        ${m.text}
-                        ${me.role === 'director' ? `<div onclick="delMsg(${i})" style="font-size:0.6rem; color:red; margin-top:5px; cursor:pointer;">удалить</div>` : ''}
+            DB.orders.push({ client: c, price: p, desc: d, ref: r, status: 'new', date: new Date().toLocaleDateString() });
+            save(); msg('Создано!'); nav('orders');
+        }
+
+        // --- ЭКРАН 3: КОМАНДА ---
+        function renderTeam(el) {
+            el.innerHTML = '<h3>КОМАНДА M.C.</h3>';
+            DB.users.forEach(u => {
+                let dots = '';
+                for(let i=1; i<=3; i++) dots += `<span style="display:inline-block; width:10px; height:10px; background:${u.warns>=i?'red':'#333'}; border-radius:50%; margin-right:5px;"></span>`;
+                
+                el.innerHTML += `
+                    <div class="card" style="display:flex; align-items:center; gap:15px;">
+                        <div style="width:50px; height:50px; background:#1a1a1a; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:bold;">${u.name[0]}</div>
+                        <div style="flex:1;">
+                            <b>${u.name}</b> <small style="color:#666">(${u.role})</small><br>
+                            <small>XP: ${u.xp}</small>
+                            <div style="margin-top:5px;">${dots}</div>
+                        </div>
+                        ${USER.role === 'director' && u.phone !== USER.phone ? `
+                            <button onclick="warn('${u.phone}')" style="background:red; color:#fff; border:none; padding:5px 10px; border-radius:5px; font-size:0.6rem;">ВЫГОВОР</button>
+                        ` : ''}
                     </div>
                 `;
             });
-            feed.scrollTop = feed.scrollHeight;
         }
 
-        function sendMsg() {
-            const txt = document.getElementById('msg-text').value.trim();
-            if(!txt) return;
-            const time = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-            DB.chat.push({ user: me.name, role: me.role, text: txt, time: time });
-            saveData();
-            document.getElementById('msg-text').value = '';
-            updateChatFeed();
+        function warn(ph) {
+            let u = DB.users.find(x => x.phone === ph);
+            if(u) { u.warns++; save(); renderTeam(document.getElementById('view')); msg('Выговор!'); }
         }
 
-        function delMsg(i) {
-            DB.chat.splice(i, 1);
-            saveData();
-            updateChatFeed();
+        // --- ЭКРАН 4: КАССА ---
+        function renderFin(el) {
+            const total = DB.orders.filter(o => o.status === 'done').reduce((a,b) => a + Number(b.price), 0);
+            el.innerHTML = `
+                <div style="text-align:center; padding-top:50px;">
+                    <small>ОБЩИЙ ДОХОД</small>
+                    <div style="font-size:3rem; font-weight:900; color:var(--gold); margin:20px 0;">${total} сом</div>
+                    <p style="color:#444; font-size:0.8rem;">Учитываются только закрытые заказы</p>
+                </div>
+            `;
         }
 
-        // --- ЭКРАН: КОМАНДА ---
-        function renderTeam(container) {
-            let html = `<h3>СОТРУДНИКИ</h3>`;
-            
-            // Сортировка по XP
-            let sorted = [...DB.users].sort((a,b) => (b.xp||0) - (a.xp||0));
+        // --- УТИЛИТЫ ---
+        function setStatus(i, st) {
+            DB.orders[i].status = st;
+            if(st === 'done') {
+                // Начисление XP (простое)
+                let meDb = DB.users.find(u => u.phone === USER.phone);
+                if(meDb) meDb.xp++;
+            }
+            save(); nav('orders');
+        }
 
-            sorted.forEach(u => {
-                let rank = u.xp >= 10 ? 'SENIOR' : (u.xp >= 3 ? 'MIDDLE' : 'JUNIOR');
-                let rankColor = u.xp >= 10 ? 'var(--purple)' : (u.xp >= 3 ? 'var(--blue)' : '#333');
-                
-                let warnings = '';
-                for(let i=1; i<=3; i++) {
-                    warnings += `<span style="display:inline-block; width:8px; height:8px; background:${u.warns>=i?'red':'#333'}; border-radius:50%; margin-right:4px;"></span>`;
-                }
+        function save() { localStorage.setItem(DB_KEY, JSON.stringify(DB)); }
+        
+        function msg(text) {
+            const t = document.getElementById('toast');
+            t.innerText = text; t.style.display = 'block';
+            setTimeout(() => t.style.display = 'none', 2000);
+        }
 
-                html += `
-                    <div class="card" style="display:flex; align-items:center; gap:15px;">
-                        <div style="wi
+        function toggleReg(show) {
+            document.getElementById('login-box').classList.toggle('hidden', show);
+            document.getElementById('reg-box').classList.toggle('hidden', !show);
+        }
+
+        function hardReset() {
+            if(confirm('ЭТО УДАЛИТ ВСЮ БАЗУ ДАННЫХ. ПРОДОЛЖИТЬ?')) {
+                localStorage.removeItem(DB_KEY);
+                location.reload();
+            }
+        }
+
+    </script>
+</body>
+</html>
