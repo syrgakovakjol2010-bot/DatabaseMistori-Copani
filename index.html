@@ -3,238 +3,164 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>M.C. CHAT | BOSS TERMINAL</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <title>M.C. ULTIMATE | STABLE v20.0</title>
     <style>
-        /* --- СТИЛИ И ПЕРЕМЕННЫЕ --- */
+        /* --- CSS: ДИЗАЙН И АДАПТИВНОСТЬ --- */
         :root {
-            --bg: #000000;
-            --card: #0a0a0a;
-            --border: #1a1a1a;
-            --text: #ffffff;
-            --text-dim: #666666;
-            --gold: #ffd700;
-            --green: #00ff66;
-            --red: #ff3333;
-            --blue: #0088ff;
-            --purple: #bf00ff;
+            --bg: #000; --card: #0a0a0a; --border: #1a1a1a; --text: #fff;
+            --dim: #666; --gold: #ffd700; --green: #00ff66; --red: #ff3333; --blue: #0088ff;
         }
 
-        * { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; }
-        body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; margin: 0; padding: 0; overflow: hidden; height: 100vh; }
+        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
+        body { background: var(--bg); color: var(--text); font-family: sans-serif; margin: 0; padding: 0; overflow: hidden; height: 100vh; }
 
-        /* --- ВХОД --- */
-        #auth-screen {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            display: flex; align-items: center; justify-content: center;
-            background: var(--bg); z-index: 5000;
-        }
-        .auth-card {
-            width: 90%; max-width: 380px; background: var(--card);
-            border: 1px solid var(--border); padding: 40px; border-radius: 30px;
-            text-align: center; box-shadow: 0 20px 80px rgba(0,0,0,0.8);
-        }
-        .auth-card h1 { font-size: 3rem; letter-spacing: 10px; margin: 0; font-weight: 900; }
+        /* Вход и Регистрация */
+        .auth-screen { position: fixed; inset: 0; display: flex; align-items: center; justify-content: center; background: #000; z-index: 5000; padding: 20px; }
+        .auth-card { width: 100%; max-width: 360px; background: var(--card); border: 1px solid var(--border); padding: 35px; border-radius: 25px; text-align: center; }
         
-        input, textarea {
-            width: 100%; padding: 16px; margin: 10px 0; background: #111;
-            border: 1px solid #222; color: #fff; border-radius: 15px; font-size: 16px;
-        }
-        .btn {
-            width: 100%; padding: 16px; border-radius: 15px; font-weight: 800;
-            border: none; cursor: pointer; text-transform: uppercase; transition: 0.3s;
-        }
+        input, textarea { width: 100%; padding: 14px; margin: 8px 0; background: #111; border: 1px solid #333; color: #fff; border-radius: 12px; font-size: 16px; }
+        .btn { width: 100%; padding: 15px; border-radius: 12px; font-weight: bold; border: none; cursor: pointer; text-transform: uppercase; transition: 0.2s; }
         .btn-white { background: #fff; color: #000; }
-        .btn-out { background: transparent; color: var(--text-dim); border: 1px solid #222; margin-top: 15px; }
+        .btn-out { background: transparent; color: var(--dim); border: 1px solid #222; margin-top: 10px; }
 
-        /* --- ГЛАВНЫЙ ИНТЕРФЕЙС --- */
-        #app { display: none; height: 100vh; width: 100vw; flex-direction: row; }
+        /* Интерфейс приложения */
+        #app { display: none; height: 100vh; flex-direction: row; }
+        .sidebar { width: 260px; background: #050505; border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 25px; }
+        .main { flex: 1; display: flex; flex-direction: column; position: relative; }
+        .top-bar { padding: 15px 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.8); backdrop-filter: blur(10px); }
+        .view { flex: 1; overflow-y: auto; padding: 20px; padding-bottom: 100px; }
 
-        /* Sidebar (ПК) */
-        .sidebar {
-            width: 280px; background: #050505; border-right: 1px solid var(--border);
-            display: flex; flex-direction: column; padding: 30px; z-index: 100;
-        }
-        .nav-list { flex: 1; display: flex; flex-direction: column; gap: 8px; }
-        .nav-item {
-            background: transparent; border: none; color: var(--text-dim);
-            padding: 14px 18px; border-radius: 12px; text-align: left;
-            cursor: pointer; font-weight: 600; display: flex; align-items: center; gap: 12px;
-        }
-        .nav-item.active { background: #111; color: #fff; border-left: 4px solid #fff; }
+        /* Карточки заказов */
+        .card { background: var(--card); border: 1px solid var(--border); padding: 20px; border-radius: 20px; margin-bottom: 15px; position: relative; }
+        .price { position: absolute; top: 20px; right: 20px; color: var(--gold); font-weight: bold; border: 1px solid var(--gold); padding: 3px 8px; border-radius: 6px; font-size: 0.8rem; }
+        .ref { background: #000; border: 1px dashed #333; padding: 10px; border-radius: 8px; font-size: 0.8rem; color: var(--blue); margin-top: 10px; word-break: break-all; }
 
-        /* Контент */
-        .main-wrapper { flex: 1; display: flex; flex-direction: column; height: 100vh; position: relative; }
-        .top-bar {
-            padding: 15px 25px; display: flex; justify-content: space-between;
-            align-items: center; background: rgba(0,0,0,0.6); backdrop-filter: blur(20px);
-            border-bottom: 1px solid var(--border);
-        }
-        .view-port { flex: 1; overflow-y: auto; padding: 20px; padding-bottom: 120px; }
+        /* Чат */
+        .chat-wrap { display: flex; flex-direction: column; height: 100%; max-width: 600px; margin: 0 auto; }
+        .chat-msgs { flex: 1; overflow-y: auto; padding: 10px; display: flex; flex-direction: column; gap: 10px; }
+        .m { padding: 10px 15px; border-radius: 15px; max-width: 85%; font-size: 0.9rem; }
+        .m-me { align-self: flex-end; background: #fff; color: #000; }
+        .m-ot { align-self: flex-start; background: #1a1a1a; border: 1px solid #333; }
+        .chat-in { display: flex; gap: 10px; padding: 15px; border-top: 1px solid var(--border); }
 
-        /* --- ЧАТ СТИЛИ --- */
-        .chat-container { display: flex; flex-direction: column; height: 100%; max-width: 800px; margin: 0 auto; }
-        .chat-messages { flex: 1; overflow-y: auto; padding: 10px; display: flex; flex-direction: column; gap: 12px; }
-        
-        .msg { max-width: 80%; padding: 12px 16px; border-radius: 18px; position: relative; font-size: 0.95rem; line-height: 1.4; }
-        .msg-own { align-self: flex-end; background: #fff; color: #000; border-bottom-right-radius: 4px; }
-        .msg-other { align-self: flex-start; background: #1a1a1a; color: #fff; border-bottom-left-radius: 4px; border: 1px solid #333; }
-        
-        .msg-info { font-size: 0.65rem; margin-bottom: 4px; opacity: 0.6; display: flex; justify-content: space-between; }
-        .msg-text { word-wrap: break-word; }
-        
-        .chat-input-area { display: flex; gap: 10px; padding: 15px; border-top: 1px solid var(--border); background: #000; }
-        .chat-input { flex: 1; margin: 0 !important; }
-        .send-btn { width: 60px !important; background: var(--blue); color: #fff; border: none; border-radius: 15px; cursor: pointer; }
+        /* Команда */
+        .dot { width: 8px; height: 8px; background: #222; border-radius: 50%; display: inline-block; margin-right: 3px; }
+        .dot-on { background: var(--red); box-shadow: 0 0 5px var(--red); }
 
-        /* --- КАРТОЧКИ И ТАБЛИЦЫ --- */
-        .stat-card { background: var(--card); border: 1px solid var(--border); padding: 20px; border-radius: 20px; }
-        .order-card { background: var(--card); border: 1px solid var(--border); padding: 20px; border-radius: 25px; margin-bottom: 15px; position: relative; }
-        .price-badge { position: absolute; top: 20px; right: 20px; color: var(--gold); font-weight: 900; border: 1px solid var(--gold); padding: 4px 8px; border-radius: 8px; font-size: 0.8rem; }
-        
-        .warn-dot { width: 8px; height: 8px; background: #222; border-radius: 50%; display: inline-block; margin-right: 4px; }
-        .warn-red { background: var(--red); box-shadow: 0 0 8px var(--red); }
+        /* Навигация (Мобильная) */
+        .nav { position: fixed; bottom: 0; width: 100%; background: #080808; border-top: 1px solid var(--border); display: flex; justify-content: space-around; padding: 10px 0; z-index: 1000; }
+        .nav-link { background: none; border: none; color: #444; font-size: 0.6rem; font-weight: bold; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+        .nav-link.active { color: #fff; }
 
-        /* --- MOBILE NAV --- */
-        .bottom-nav {
-            position: fixed; bottom: 0; width: 100%; height: 75px;
-            background: rgba(5,5,5,0.95); backdrop-filter: blur(15px);
-            border-top: 1px solid var(--border); display: none;
-            justify-content: space-around; align-items: center; padding-bottom: 15px; z-index: 1000;
-        }
-        .nav-btn-mob { background: none; border: none; color: #444; font-size: 0.6rem; display: flex; flex-direction: column; align-items: center; gap: 5px; font-weight: bold; }
-        .nav-btn-mob.active { color: #fff; }
+        @media (max-width: 900px) { .sidebar { display: none; } }
+        @media (min-width: 901px) { .nav { display: none; } }
 
-        @media (max-width: 900px) {
-            .sidebar { display: none; }
-            .bottom-nav { display: flex; }
-            .top-bar { padding: 10px 15px; }
-            .view-port { padding: 15px; }
-        }
-
-        #toast {
-            position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
-            background: #fff; color: #000; padding: 12px 30px; border-radius: 50px;
-            font-weight: 900; display: none; z-index: 10000; font-size: 0.8rem;
-        }
+        #toast { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: #fff; color: #000; padding: 10px 25px; border-radius: 50px; font-weight: bold; display: none; z-index: 6000; }
     </style>
 </head>
 <body>
 
     <div id="toast"></div>
 
-    <div id="auth-screen">
-        <div class="auth-card" id="login-box">
-            <h1>M.C.</h1>
-            <p>MISTORI COPANI BOSS v19</p>
-            <input type="text" id="l-phone" placeholder="Номер (705 163 333)">
-            <input type="password" id="l-pass" placeholder="Пароль">
-            <button class="btn btn-white" onclick="tryLogin()">ВОЙТИ</button>
+    <div id="auth-scr" class="auth-screen">
+        <div class="auth-card" id="l-box">
+            <h1 style="letter-spacing: 10px;">M.C.</h1>
+            <p style="color: #444; font-size: 0.7rem; margin-bottom: 25px;">STABLE ULTIMATE v20.0</p>
+            <input type="text" id="l-ph" placeholder="Номер (705 163 333)">
+            <input type="password" id="l-ps" placeholder="Пароль">
+            <button class="btn btn-white" onclick="login()">ВОЙТИ</button>
             <button class="btn btn-out" onclick="toggleReg(true)">РЕГИСТРАЦИЯ</button>
-            <p onclick="fullReset()" style="margin-top:25px; font-size:0.5rem; color:#222; cursor:pointer;">СБРОСИТЬ БАЗУ ДАННЫХ</p>
+            <button onclick="clearCache()" style="background:none; border:none; color:red; font-size:0.6rem; margin-top:30px; cursor:pointer;">ОЧИСТИТЬ ОШИБКИ ПАМЯТИ</button>
         </div>
-        
-        <div class="auth-card" id="reg-box" style="display:none;">
+        <div class="auth-card" id="r-box" style="display:none;">
             <h2>НОВЫЙ ID</h2>
-            <input type="text" id="r-name" placeholder="Имя">
-            <input type="text" id="r-phone" placeholder="Номер">
-            <input type="password" id="r-pass" placeholder="Пароль">
-            <button class="btn btn-white" onclick="tryReg()">СОЗДАТЬ</button>
+            <input type="text" id="r-n" placeholder="Имя">
+            <input type="text" id="r-p" placeholder="Номер телефона">
+            <input type="password" id="r-ps" placeholder="Пароль">
+            <button class="btn btn-white" onclick="register()">СОЗДАТЬ</button>
             <button class="btn btn-out" onclick="toggleReg(false)">НАЗАД</button>
         </div>
     </div>
 
     <div id="app">
         <div class="sidebar">
-            <div style="font-size:1.5rem; font-weight:900; letter-spacing:4px; margin-bottom:40px;">MISTORI</div>
-            <div class="nav-list">
-                <button class="nav-item active" id="pc-orders" onclick="tab('orders')">💼 ЗАКАЗЫ</button>
-                <button class="nav-item" id="pc-chat" onclick="tab('chat')">💬 ЧАТ СТУДИИ</button>
-                <button class="nav-item" id="pc-team" onclick="tab('team')">👥 КОМАНДА</button>
-                <button class="nav-item" id="pc-add" onclick="tab('add')">➕ НОВЫЙ ПРОЕКТ</button>
-                <button class="nav-item" id="pc-fin" onclick="tab('fin')">📊 КАССА</button>
+            <h2 style="letter-spacing: 5px;">MISTORI</h2>
+            <div style="display:flex; flex-direction:column; gap:8px; flex:1; margin-top:30px;">
+                <button class="btn btn-out" onclick="go('orders')">ЗАКАЗЫ</button>
+                <button class="btn btn-out" onclick="go('chat')">ЧАТ</button>
+                <button class="btn btn-out" onclick="go('team')">КОМАНДА</button>
+                <button class="btn btn-out" onclick="go('add')">+ НОВЫЙ</button>
+                <button class="btn btn-out" onclick="go('fin')">КАССА</button>
             </div>
-            <button class="nav-item" onclick="location.reload()" style="color:var(--red); margin-top:20px;">ВЫХОД</button>
+            <button class="btn btn-out" onclick="location.reload()" style="color:red;">ВЫХОД</button>
         </div>
 
-        <div class="main-wrapper">
+        <div class="main">
             <div class="top-bar">
-                <div style="display:flex; align-items:center; gap:12px;">
-                    <div id="me-ava" style="width:35px; height:35px; background:#111; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:bold; border:1px solid #333;">A</div>
-                    <div>
-                        <b id="me-name">Akjol</b> <br>
-                        <small id="me-role" style="color:var(--green); font-size:0.6rem; text-transform:uppercase;"></small>
-                    </div>
+                <div>
+                    <b id="me-n">Akjol</b> <br>
+                    <small id="me-r" style="color:var(--green); font-size:0.6rem; text-transform:uppercase;"></small>
                 </div>
-                <div style="font-weight:900; opacity:0.2; font-size:0.7rem; letter-spacing:2px;">MISTORI COPANI</div>
+                <div style="font-weight:900; opacity:0.3; font-size:0.7rem;">MISTORI COPANI</div>
             </div>
 
-            <div class="view-port" id="view-port">
+            <div class="view" id="view">
                 </div>
 
-            <div class="bottom-nav">
-                <button class="nav-btn-mob active" id="mb-orders" onclick="tab('orders')">📦<br>ПРОЕКТЫ</button>
-                <button class="nav-btn-mob" id="mb-chat" onclick="tab('chat')">💬<br>ЧАТ</button>
-                <button class="nav-btn-mob" id="mb-team" onclick="tab('team')">👥<br>КОМАНДА</button>
-                <button class="nav-btn-mob" id="mb-add" onclick="tab('add')">➕<br>НОВЫЙ</button>
-                <button class="nav-btn-mob" id="mb-fin" onclick="tab('fin')">📊<br>КАССА</button>
+            <div class="nav">
+                <button class="nav-link" id="n-orders" onclick="go('orders')">📦<br>ЗАКАЗЫ</button>
+                <button class="nav-link" id="n-chat" onclick="go('chat')">💬<br>ЧАТ</button>
+                <button class="nav-link" id="n-team" onclick="go('team')">👥<br>КОМАНДА</button>
+                <button class="nav-link" id="n-add" onclick="go('add')">➕<br>НОВЫЙ</button>
+                <button class="nav-link" id="n-fin" onclick="go('fin')">📊<br>КАССА</button>
             </div>
         </div>
     </div>
 
     <script>
-        /* --- CORE LOGIC --- */
-
-        let DB = JSON.parse(localStorage.getItem('mc_v19_chat')) || {
-            users: [
-                { name: "Сезим", phone: "777800603", pass: "admin2", role: "manager", xp: 5, warns: 0 }
-            ],
+        /* --- JS ЛОГИКА --- */
+        let DB = JSON.parse(localStorage.getItem('mc_v20_stable')) || {
+            users: [{ name: "Сезим", phone: "777800603", pass: "admin2", role: "manager", xp: 5, warns: 0 }],
             orders: [],
-            messages: [
-                { user: "Система", text: "Добро пожаловать в чат Mistori Copani!", time: "00:00", role: "system" }
-            ]
+            msgs: [{ u: "Система", t: "Чат Mistori Copani запущен!", time: "00:00" }]
         };
-
         let me = null;
 
-        function tryLogin() {
-            const ph = document.getElementById('l-phone').value.trim();
-            const ps = document.getElementById('l-pass').value.trim();
-
+        // Авторизация
+        function login() {
+            const ph = document.getElementById('l-ph').value.trim();
+            const ps = document.getElementById('l-ps').value.trim();
             if (ph === '705163333' && ps === 'admin123') {
-                me = { name: "Акжол", phone: ph, role: "director", xp: 999 };
-                enterApp();
+                me = { name: "Акжол", phone: ph, role: "director" };
+                startApp();
             } else {
                 let u = DB.users.find(x => x.phone === ph && x.pass === ps);
-                if (u) { me = u; enterApp(); } else { notify('ОШИБКА ДОСТУПА'); }
+                if (u) { me = u; startApp(); } else { msg('Ошибка входа!'); }
             }
         }
 
-        function tryReg() {
-            const n = document.getElementById('r-name').value;
-            const p = document.getElementById('r-phone').value;
-            const ps = document.getElementById('r-pass').value;
-            if(!n || !p || !ps) return notify('ЗАПОЛНИТЕ ВСЁ');
-            if(DB.users.find(x => x.phone === p) || p === '705163333') return notify('НОМЕР ЗАНЯТ');
-
+        function register() {
+            const n = document.getElementById('r-n').value;
+            const p = document.getElementById('r-p').value;
+            const ps = document.getElementById('r-ps').value;
+            if(!n || !p || !ps) return msg('Заполните всё!');
             DB.users.push({ name: n, phone: p, pass: ps, role: "programmer", xp: 0, warns: 0 });
-            save(); notify('ID СОЗДАН!'); location.reload();
+            save(); msg('Готово! Войдите.'); location.reload();
         }
 
-        function enterApp() {
-            document.getElementById('auth-screen').style.display = 'none';
+        function startApp() {
+            document.getElementById('auth-scr').style.display = 'none';
             document.getElementById('app').style.display = 'flex';
-            document.getElementById('me-name').innerText = me.name;
-            document.getElementById('me-role').innerText = me.role;
-            document.getElementById('me-ava').innerText = me.name[0];
-            tab('orders');
+            document.getElementById('me-n').innerText = me.name;
+            document.getElementById('me-r').innerText = me.role;
+            go('orders');
         }
 
-        function tab(t) {
-            const port = document.getElementById('view-port');
-            document.querySelectorAll('.nav-item, .nav-btn-mob').forEach(b => b.classList.remove('active'));
-            if(document.getElementById('pc-'+t)) document.getElementById('pc-'+t).classList.add('active');
-            if(document.getElementById('mb-'+t)) document.getElementById('mb-'+t).classList.add('active');
+        // Навигация
+        function go(t) {
+            const v = document.getElementById('view');
+            document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+            if(document.getElementById('n-'+t)) document.getElementById('n-'+t).classList.add('active');
 
             if(t === 'orders') renderOrders();
             if(t === 'chat') renderChat();
@@ -243,63 +169,51 @@
             if(t === 'fin') renderFin();
         }
 
-        // --- СТРАНИЦА ЗАКАЗОВ ---
+        // Страницы
         function renderOrders() {
-            const port = document.getElementById('view-port');
-            port.innerHTML = `<h3>Актуальные проекты</h3><div id="order-list"></div>`;
-            const list = document.getElementById('order-list');
-
-            DB.orders.filter(o => o.status !== 'archive').reverse().forEach((o, i) => {
+            const v = document.getElementById('view');
+            v.innerHTML = '<h3>Проекты M.C.</h3>';
+            DB.orders.filter(o => o.st !== 'arc').reverse().forEach((o, i) => {
                 let idx = DB.orders.indexOf(o);
-                list.innerHTML += `
-                    <div class="order-card">
-                        <div class="price-badge">${o.price} с</div>
-                        <b>${o.client}</b>
-                        <p style="color:var(--text-dim); font-size:0.8rem; margin:10px 0;">${o.desc}</p>
-                        <div style="margin-top:15px; display:flex; gap:8px;">
-                            ${o.status === 'new' ? `<button onclick="updSt(${idx},'work')" class="btn btn-white" style="padding:8px; width:auto;">ВЗЯТЬ</button>` : ''}
-                            ${o.status === 'work' ? `<button onclick="updSt(${idx},'done')" class="btn btn-white" style="background:var(--gold); padding:8px; width:auto;">ГОТОВО</button>` : ''}
-                            ${me.role === 'director' ? `<button onclick="updSt(${idx},'archive')" style="background:none; border:none; color:red; font-size:0.6rem;">УДАЛИТЬ</button>` : ''}
+                v.innerHTML += `
+                    <div class="card">
+                        <span class="price">${o.p} с</span>
+                        <b>${o.c}</b> <br>
+                        <small style="color:gray">${o.d}</small>
+                        ${o.ref ? `<div class="ref">${o.ref}</div>` : ''}
+                        <div style="margin-top:15px; display:flex; gap:10px;">
+                            ${o.st === 'new' ? `<button onclick="updSt(${idx},'work')" class="btn btn-white" style="padding:5px 10px; width:auto; font-size:0.7rem;">ВЗЯТЬ</button>` : ''}
+                            ${o.st === 'work' ? `<button onclick="updSt(${idx},'done')" class="btn btn-white" style="background:var(--gold); padding:5px 10px; width:auto; font-size:0.7rem;">ГОТОВО</button>` : ''}
+                            ${me.role !== 'programmer' ? `<button onclick="updSt(${idx},'arc')" style="background:none; border:none; color:red; font-size:0.6rem;">УДАЛИТЬ</button>` : ''}
                         </div>
                     </div>
                 `;
             });
         }
 
-        // --- СИСТЕМА ЧАТА ---
         function renderChat() {
-            const port = document.getElementById('view-port');
-            port.innerHTML = `
-                <div class="chat-container">
-                    <div class="chat-messages" id="chat-msgs"></div>
-                    <div class="chat-input-area">
-                        <input type="text" id="chat-inp" class="chat-input" placeholder="Написать сообщение...">
-                        <button class="send-btn" onclick="sendMsg()">></button>
+            const v = document.getElementById('view');
+            v.innerHTML = `
+                <div class="chat-wrap">
+                    <div class="chat-msgs" id="chat-box"></div>
+                    <div class="chat-in">
+                        <input id="chat-txt" placeholder="Сообщение...">
+                        <button class="btn btn-white" onclick="sendMsg()" style="width:60px;">></button>
                     </div>
                 </div>
             `;
             updateChat();
-            
-            // Отправка по Enter
-            document.getElementById('chat-inp').addEventListener('keypress', (e) => {
-                if(e.key === 'Enter') sendMsg();
-            });
         }
 
         function updateChat() {
-            const box = document.getElementById('chat-msgs');
+            const box = document.getElementById('chat-box');
             if(!box) return;
             box.innerHTML = '';
-            DB.messages.forEach((m, i) => {
-                const isMe = m.user === me.name;
+            DB.msgs.forEach(m => {
+                const isMe = m.u === me.name;
                 box.innerHTML += `
-                    <div class="msg ${isMe ? 'msg-own' : 'msg-other'}">
-                        <div class="msg-info">
-                            <span>${m.user} (${m.role})</span>
-                            <span>${m.time}</span>
-                        </div>
-                        <div class="msg-text">${m.text}</div>
-                        ${me.role === 'director' ? `<div onclick="delMsg(${i})" style="font-size:0.5rem; color:red; cursor:pointer; margin-top:5px;">Удалить</div>` : ''}
+                    <div class="m ${isMe?'m-me':'m-ot'}">
+                        <small style="font-size:0.6rem; opacity:0.5;">${m.u} | ${m.time}</small><br>${m.t}
                     </div>
                 `;
             });
@@ -307,98 +221,70 @@
         }
 
         function sendMsg() {
-            const inp = document.getElementById('chat-inp');
-            if(!inp.value.trim()) return;
+            const txt = document.getElementById('chat-txt').value;
+            if(!txt) return;
             const now = new Date();
-            const time = now.getHours() + ":" + (now.getMinutes()<10?'0':'') + now.getMinutes();
-            
-            DB.messages.push({
-                user: me.name,
-                text: inp.value,
-                time: time,
-                role: me.role
-            });
-            inp.value = '';
-            save();
-            updateChat();
+            DB.msgs.push({ u: me.name, t: txt, time: now.getHours()+':'+(now.getMinutes()<10?'0':'')+now.getMinutes() });
+            document.getElementById('chat-txt').value = '';
+            save(); updateChat();
         }
 
-        function delMsg(i) {
-            DB.messages.splice(i, 1);
-            save();
-            updateChat();
-        }
-
-        // --- КОМАНДА ---
         function renderTeam() {
-            const port = document.getElementById('view-port');
-            port.innerHTML = `<h3>Сотрудники M.C.</h3><div id="team-list"></div>`;
-            const list = document.getElementById('team-list');
-
+            const v = document.getElementById('view');
+            v.innerHTML = '<h3>Команда</h3>';
             DB.users.forEach(u => {
-                let dots = '';
-                for(let i=1; i<=3; i++) dots += `<div class="warn-dot ${u.warns >= i ? 'warn-red' : ''}"></div>`;
-                list.innerHTML += `
-                    <div class="order-card" style="display:flex; align-items:center; gap:15px;">
-                        <div style="width:50px; height:50px; background:#111; border-radius:50%; border:1px solid #333; display:flex; align-items:center; justify-content:center; font-weight:bold;">${u.name[0]}</div>
-                        <div style="flex:1;">
-                            <b>${u.name}</b> <small style="color:gray;">(${u.role})</small><br>
-                            <small>XP: ${u.xp}</small>
-                            <div style="margin-top:5px;">${dots}</div>
+                v.innerHTML += `
+                    <div class="card" style="display:flex; justify-content:space-between; align-items:center;">
+                        <div>
+                            <b>${u.name}</b> (${u.role})<br>
+                            <div style="margin-top:5px;">
+                                <div class="dot ${u.warns>=1?'dot-on':''}"></div>
+                                <div class="dot ${u.warns>=2?'dot-on':''}"></div>
+                                <div class="dot ${u.warns>=3?'dot-on':''}"></div>
+                            </div>
                         </div>
-                        ${me.role === 'director' && u.phone !== me.phone ? `<button onclick="addWarn('${u.phone}')" style="background:red; border:none; color:white; padding:5px; font-size:0.6rem; border-radius:5px;">ВЫГОВОР</button>` : ''}
+                        ${me.role==='director'&&u.phone!==me.phone ? `<button onclick="warn('${u.phone}')" style="background:red; color:white; border:none; padding:5px; border-radius:5px; font-size:0.6rem;">ВЫГОВОР</button>` : ''}
                     </div>
                 `;
             });
         }
 
-        function addWarn(ph) {
-            let u = DB.users.find(x => x.phone === ph);
-            if(u) { u.warns++; save(); renderTeam(); notify('ВЫГОВОР ВЫДАН'); }
-        }
-
-        // --- СОЗДАНИЕ ---
         function renderAdd() {
-            if(me.role === 'programmer') return notify('НЕТ ПРАВ');
-            document.getElementById('view-port').innerHTML = `
+            if(me.role === 'programmer') return msg('Нет доступа');
+            const v = document.getElementById('view');
+            v.innerHTML = `
                 <h3>Новый проект</h3>
-                <input id="in-c" placeholder="Клиент">
-                <input id="in-p" type="number" placeholder="Бюджет (сом)">
-                <textarea id="in-d" placeholder="Описание проекта"></textarea>
-                <button class="btn btn-white" onclick="saveOrder()">СОЗДАТЬ</button>
+                <input id="ic" placeholder="Клиент">
+                <input id="ip" type="number" placeholder="Цена">
+                <textarea id="id" placeholder="Описание / ТЗ"></textarea>
+                <input id="ir" placeholder="Референсы (ссылки)">
+                <button class="btn btn-white" onclick="addOrder()">СОЗДАТЬ</button>
             `;
         }
 
-        function saveOrder() {
-            const c = document.getElementById('in-c').value;
-            const p = document.getElementById('in-p').value;
-            const d = document.getElementById('in-d').value;
-            if(!c || !p) return notify('ЗАПОЛНИТЕ ПОЛЯ');
-            DB.orders.push({ client: c, price: p, desc: d, status: 'new' });
-            save(); notify('ГОТОВО'); tab('orders');
+        // Функции действий
+        function addOrder() {
+            const c = document.getElementById('ic').value;
+            const p = document.getElementById('ip').value;
+            const d = document.getElementById('id').value;
+            const r = document.getElementById('ir').value;
+            if(!c || !p) return msg('Заполните поля!');
+            DB.orders.push({ c, p, d, ref: r, st: 'new' });
+            save(); msg('Создано!'); go('orders');
         }
 
-        // --- КАССА ---
+        function updSt(i, st) { DB.orders[i].st = st; save(); go('orders'); }
+        function warn(ph) { let u=DB.users.find(x=>x.phone===ph); if(u){ u.warns++; save(); go('team'); msg('Выговор выдан!'); } }
         function renderFin() {
-            const profit = DB.orders.filter(o => o.status === 'done').reduce((a, b) => a + Number(b.price), 0);
-            document.getElementById('view-port').innerHTML = `
-                <div style="text-align:center; padding-top:50px;">
-                    <small>ОБЩИЙ ДОХОД</small>
-                    <h1 style="color:var(--gold); font-size:3rem;">${profit} сом</h1>
-                </div>
-            `;
+            let total = DB.orders.filter(o=>o.st==='done').reduce((a,b)=>a+Number(b.p), 0);
+            document.getElementById('view').innerHTML = `<div style="text-align:center; padding-top:50px;"><small>КАССА M.C.</small><h1 style="color:var(--gold)">${total} сом</h1></div>`;
         }
 
-        /* --- СИСТЕМНЫЕ --- */
-        function updSt(i, st) { 
-            DB.orders[i].status = st; 
-            if(st === 'done') {
-                let u = DB.users.find(x => x.name === me.name);
-                if(u) u.xp++;
-            }
-            save(); tab('orders'); 
-        }
-        function save() { localStorage.setItem('mc_v19_chat', JSON.stringify(DB)); }
-        function notify(m) { const t=document.getElementById('toast'); t.innerText=m; t.style.display='block'; setTimeout(()=>t.style.display='none', 2000); }
-        function toggleReg(s) { document.getElementById('login-box').style.display=s?'none':'block'; document.getElementById('reg-box').style.display=s?'block':'none'; }
-        function fullReset() { if(confirm('СБРОСИТЬ ВСЁ?')) { loc
+        // Системные
+        function save() { localStorage.setItem('mc_v20_stable', JSON.stringify(DB)); }
+        function msg(m) { const t=document.getElementById('toast'); t.innerText=m; t.style.display='block'; setTimeout(()=>t.style.display='none', 2000); }
+        function toggleReg(s) { document.getElementById('l-box').style.display=s?'none':'block'; document.getElementById('r-box').style.display=s?'block':'none'; }
+        function clearCache() { localStorage.clear(); location.reload(); }
+    </script>
+</body>
+</html>
