@@ -3,84 +3,125 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>S.A.B. CONTROL</title>
+    <title>S.A.B. ULTIMATE SYSTEM</title>
     <style>
-        /* --- ДИЗАЙН (СТИЛИ) --- */
-        body { background-color: #000000; color: #ffffff; font-family: sans-serif; margin: 0; height: 100vh; display: flex; flex-direction: column; }
+        /* --- 1. ДИЗАЙН И СТИЛИ --- */
+        body { background-color: #000000; color: #ffffff; font-family: 'Segoe UI', Roboto, Helvetica, sans-serif; margin: 0; height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
         
-        /* Экран входа */
-        .login-box { width: 300px; margin: 100px auto; border: 1px solid white; padding: 30px; text-align: center; }
-        input { width: 90%; background: #000; border: 1px solid #fff; color: #fff; padding: 10px; margin: 10px 0; }
-        button { cursor: pointer; padding: 10px; text-transform: uppercase; font-weight: bold; transition: 0.2s; }
-        .btn-white { background: white; color: black; border: none; width: 100%; }
-        .btn-outline { background: transparent; color: white; border: 1px solid white; width: 100%; }
+        /* Вход */
+        .login-wrapper { display: flex; align-items: center; justify-content: center; height: 100vh; background: #000; }
+        .login-box { width: 320px; border: 1px solid #333; padding: 40px; text-align: center; background: #050505; box-shadow: 0 0 30px rgba(255,255,255,0.05); border-radius: 8px; }
+        input { width: 100%; box-sizing: border-box; background: #111; border: 1px solid #444; color: #fff; padding: 12px; margin: 8px 0; outline: none; border-radius: 4px; }
+        input:focus { border-color: #fff; background: #000; }
+        button { cursor: pointer; padding: 12px; text-transform: uppercase; font-weight: bold; width: 100%; border: none; letter-spacing: 1px; border-radius: 4px; margin-top: 10px; }
+        .btn-primary { background: white; color: black; }
+        .btn-outline { background: transparent; color: #888; border: 1px solid #333; }
         
-        /* Интерфейс после входа */
+        /* Интерфейс */
         #app { display: none; height: 100%; }
-        .sidebar { width: 250px; border-right: 1px solid white; padding: 20px; background: #111; display: flex; flex-direction: column; gap: 15px; }
-        .content { flex: 1; padding: 20px; overflow-y: auto; }
+        .sidebar { width: 260px; border-right: 1px solid #222; padding: 20px; background: #080808; display: flex; flex-direction: column; gap: 10px; }
+        .content { flex: 1; padding: 20px; overflow-y: auto; background: #000; position: relative; }
         
-        /* Меню и Кнопки */
-        .menu-btn { background: transparent; color: white; border: 1px solid #444; text-align: left; width: 100%; margin-bottom: 5px; }
-        .menu-btn:hover { background: #333; }
-        .menu-active { border-color: #00ff00; color: #00ff00; }
+        /* Профиль */
+        .user-profile { display: flex; align-items: center; gap: 15px; padding-bottom: 20px; border-bottom: 1px solid #222; margin-bottom: 10px; }
+        .avatar { width: 45px; height: 45px; background: #222; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 1.2rem; border: 1px solid #444; }
+        
+        /* Меню */
+        .menu-btn { background: transparent; color: #aaa; text-align: left; padding: 12px; border-radius: 6px; display: flex; align-items: center; gap: 10px; margin-top: 5px; }
+        .menu-btn:hover, .menu-btn.active { background: #1a1a1a; color: white; border-left: 3px solid white; }
 
-        /* Карточки */
-        .stat-row { display: flex; gap: 10px; margin-bottom: 20px; }
-        .stat-card { border: 1px solid white; padding: 15px; flex: 1; text-align: center; }
-        .stat-num { font-size: 1.5rem; font-weight: bold; display: block; }
+        /* Статистика */
+        .stat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 30px; }
+        .stat-card { background: #080808; border: 1px solid #222; padding: 15px; text-align: center; border-radius: 8px; }
+        .stat-num { font-size: 1.5rem; font-weight: bold; display: block; margin-top: 5px; }
+        .money-text { color: #ffd700; text-shadow: 0 0 10px rgba(255, 215, 0, 0.3); }
+
+        /* Фильтры */
+        .filters { display: flex; gap: 8px; margin-bottom: 15px; overflow-x: auto; padding-bottom: 5px; }
+        .filter-chip { background: #111; border: 1px solid #333; color: #888; padding: 6px 14px; border-radius: 20px; font-size: 0.8rem; cursor: pointer; white-space: nowrap; width: auto; margin: 0; }
+        .filter-chip.active { background: #fff; color: #000; }
+
+        /* Карточка заказа */
+        .order-card { background: #0a0a0a; border: 1px solid #222; padding: 20px; margin-bottom: 15px; border-radius: 8px; position: relative; }
+        .order-header { display: flex; justify-content: space-between; align-items: flex-start; }
+        .price-tag { color: #ffd700; border: 1px solid #ffd700; padding: 2px 8px; border-radius: 4px; font-weight: bold; }
         
-        .order-card { border: 1px solid #555; padding: 15px; margin-bottom: 10px; background: #050505; }
-        .status-free { color: #00ff00; }
-        .status-work { color: yellow; }
-        .status-closed { color: red; }
+        /* Заметки */
+        .notes-area { background: #050505; border: 1px dashed #333; padding: 10px; margin-top: 15px; border-radius: 4px; font-size: 0.85rem; color: #aaa; }
+        .add-note { color: #00ff00; cursor: pointer; font-size: 0.75rem; margin-top: 5px; display: inline-block; }
+
+        /* Уведомления (Toast) */
+        #toast-container { position: fixed; bottom: 20px; right: 20px; display: flex; flex-direction: column; gap: 10px; z-index: 9999; }
+        .toast { background: #fff; color: #000; padding: 12px 20px; border-radius: 4px; font-weight: bold; box-shadow: 0 5px 15px rgba(0,0,0,0.5); animation: slideIn 0.3s forwards; }
+        @keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
+        
+        /* Статусы и Ранги */
+        .status-badge { font-size: 0.7rem; padding: 2px 6px; border-radius: 3px; text-transform: uppercase; border: 1px solid #333; }
+        .st-free { color: #00ff00; border-color: #00ff00; }
+        .st-work { color: yellow; border-color: yellow; }
+        .st-closed { color: red; border-color: red; }
+        .deadline-hot { color: #ff4444; font-weight: bold; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+
+        /* Цвета рангов */
+        .rank-badge { padding: 2px 6px; font-size: 0.7rem; border-radius: 3px; margin-left: 5px; }
+        .rank-jun { background: #333; color: #aaa; border: 1px solid #555; }
+        .rank-mid { background: #0000ff; color: white; border: 1px solid #5555ff; }
+        .rank-sen { background: #ff00ff; color: white; border: 1px solid #ff55ff; box-shadow: 0 0 5px #ff00ff; }
     </style>
 </head>
 <body>
 
-    <div id="login-screen">
+    <div id="toast-container"></div>
+
+    <div id="login-screen" class="login-wrapper">
         <div class="login-box">
-            <h1>S.A.B. SYSTEM</h1>
-            <p>ВХОД В СИСТЕМУ</p>
-            <input type="text" id="ph" placeholder="Номер (705163333)">
+            <h1 style="margin-bottom: 5px; letter-spacing: 3px;">S.A.B.</h1>
+            <p style="color: #666; font-size: 0.8rem; margin-bottom: 30px;">ULTIMATE STUDIO v7.0</p>
+            <input type="text" id="ph" placeholder="Номер телефона">
             <input type="password" id="ps" placeholder="Пароль">
-            <button class="btn-white" onclick="tryLogin()">ВОЙТИ</button>
-            <br><br>
-            <small>Нет аккаунта?</small>
+            <button class="btn-primary" onclick="tryLogin()">ВОЙТИ</button>
             <button class="btn-outline" onclick="showReg()">РЕГИСТРАЦИЯ</button>
         </div>
     </div>
 
-    <div id="reg-screen" style="display:none;">
+    <div id="reg-screen" class="login-wrapper" style="display:none;">
         <div class="login-box">
             <h2>НОВЫЙ СОТРУДНИК</h2>
             <input type="text" id="r-name" placeholder="Имя">
-            <input type="text" id="r-phone" placeholder="Номер">
+            <input type="text" id="r-phone" placeholder="Телефон">
             <input type="password" id="r-pass" placeholder="Пароль">
-            <button class="btn-white" onclick="doReg()">СОЗДАТЬ АККАУНТ</button>
-            <br><br>
-            <button class="btn-outline" onclick="location.reload()">НАЗАД</button>
+            <button class="btn-primary" onclick="doReg()">СОЗДАТЬ АККАУНТ</button>
+            <button class="btn-outline" onclick="location.reload()">ОТМЕНА</button>
         </div>
     </div>
 
     <div id="app">
         <div class="sidebar">
-            <h2 id="user-name">NAME</h2>
-            <p id="user-role" style="color:gray; margin-top:-15px;">ROLE</p>
-            <hr style="border:0.5px solid #333; width:100%;">
+            <div class="user-profile">
+                <div class="avatar" id="u-avatar">?</div>
+                <div>
+                    <h3 id="u-name" style="margin:0; font-size:1rem;">Name</h3>
+                    <p id="u-role" style="margin:0; font-size:0.8rem; color:#888;">Role</p>
+                </div>
+            </div>
             
-            <button class="menu-btn" onclick="renderOrders()">📁 ВСЕ ЗАКАЗЫ</button>
-            <button class="menu-btn" onclick="renderStaff()">👥 СОТРУДНИКИ</button>
-            <button class="menu-btn" id="btn-add" style="display:none; border-color:#00ff00;" onclick="renderAddOrder()">+ НОВЫЙ ЗАКАЗ</button>
+            <button class="menu-btn active" onclick="setPage('orders')">📁 ЗАКАЗЫ</button>
+            <button class="menu-btn" onclick="setPage('staff')">👥 КОМАНДА</button>
+            <button class="menu-btn" id="btn-add" style="display:none; color:#00ff00; border:1px solid #00ff00;" onclick="renderAddOrder()">+ НОВЫЙ ЗАКАЗ</button>
             
-            <button class="menu-btn" style="margin-top:auto; border-color:red; color:red;" onclick="logout()">ВЫХОД</button>
+            <div style="margin-top:auto;">
+                <button class="menu-btn" onclick="downloadBackup()" style="font-size:0.8rem; color:#666;">💾 СКАЧАТЬ БАЗУ</button>
+                <button class="menu-btn" onclick="logout()" style="color:#ff4444;">ВЫХОД</button>
+            </div>
         </div>
-        
+
         <div class="content">
-            <div class="stat-row">
-                <div class="stat-card">СВОБОДНО <span class="stat-num" id="c-free">0</span></div>
-                <div class="stat-card">В РАБОТЕ <span class="stat-num" id="c-work">0</span></div>
-                <div class="stat-card">ЗАКРЫТО <span class="stat-num" id="c-closed">0</span></div>
+            <div class="stat-grid">
+                <div class="stat-card">СВОБОДНО <span class="stat-num" id="s-free">0</span></div>
+                <div class="stat-card">В РАБОТЕ <span class="stat-num" id="s-work">0</span></div>
+                <div class="stat-card">ЗАКРЫТО <span class="stat-num" id="s-closed">0</span></div>
+                <div class="stat-card" style="border-color: #ffd700;">КАССА <span class="stat-num money-text" id="s-money">0</span></div>
             </div>
 
             <div id="main-view"></div>
@@ -88,190 +129,229 @@
     </div>
 
     <script>
-        /* --- ЛОГИКА (JAVASCRIPT) --- */
-        
-        // 1. БАЗА ДАННЫХ (Загружаем или создаем пустую)
-        let DB = JSON.parse(localStorage.getItem('sab_db')) || { 
-            users: [], 
+        /* --- 1. БАЗА ДАННЫХ И НАСТРОЙКИ --- */
+        let DB = JSON.parse(localStorage.getItem('sab_db_ultimate')) || { 
+            users: [
+                { name: "Солто", phone: "700000000", pass: "1234", role: "manager", xp: 5 } 
+            ], 
             orders: [] 
         };
-
         let currentUser = null;
+        let currentFilter = 'all';
 
-        // 2. ВХОД
+        /* --- 2. ФУНКЦИИ ВХОДА --- */
         function tryLogin() {
             const ph = document.getElementById('ph').value.trim();
             const ps = document.getElementById('ps').value.trim();
 
-            // СПЕЦИАЛЬНЫЙ ВХОД ДЛЯ ДИРЕКТОРА
             if (ph === '705163333' && ps === 'admin123') {
-                currentUser = { name: 'С.А.Б', role: 'director', phone: '705163333' };
-                enterApp();
-                return;
+                currentUser = { name: 'С.А.Б', role: 'director', phone: '705163333', xp: 9999 };
+                enterApp(); return;
             }
 
-            // Поиск в базе сотрудников
             let found = DB.users.find(u => u.phone === ph && u.pass === ps);
-            if (found) {
-                currentUser = found;
-                enterApp();
-            } else {
-                alert('Неверный номер или пароль!');
-            }
+            if (found) { currentUser = found; enterApp(); } 
+            else { showToast('⚠️ Неверный номер или пароль', 'error'); }
         }
 
-        // 3. РЕГИСТРАЦИЯ
-        function showReg() {
-            document.getElementById('login-screen').style.display = 'none';
-            document.getElementById('reg-screen').style.display = 'block';
-        }
-
-        function doReg() {
-            const name = document.getElementById('r-name').value;
-            const phone = document.getElementById('r-phone').value;
-            const pass = document.getElementById('r-pass').value;
-
-            if (phone === '705163333' || DB.users.find(u => u.phone === phone)) {
-                alert('Этот номер уже занят!');
-                return;
-            }
-            
-            DB.users.push({ name, phone, pass, role: 'programmer' });
-            saveDB();
-            alert('Готово! Теперь войдите.');
-            location.reload();
-        }
-
-        // 4. ЗАПУСК ИНТЕРФЕЙСА
         function enterApp() {
             document.getElementById('login-screen').style.display = 'none';
             document.getElementById('app').style.display = 'flex';
             
-            document.getElementById('user-name').innerText = currentUser.name;
-            document.getElementById('user-role').innerText = currentUser.role.toUpperCase();
-
-            // Показываем кнопку "Добавить заказ" только начальству
-            if (currentUser.role === 'director' || currentUser.role === 'manager') {
-                document.getElementById('btn-add').style.display = 'block';
+            document.getElementById('u-name').innerText = currentUser.name;
+            document.getElementById('u-role').innerText = currentUser.role.toUpperCase();
+            document.getElementById('u-avatar').innerText = currentUser.name[0];
+            
+            if (['director', 'manager'].includes(currentUser.role)) {
+                document.getElementById('btn-add').style.display = 'flex';
             }
-
             updateStats();
-            renderOrders(); // Сразу открываем заказы
+            renderOrders();
         }
 
-        // 5. РАБОТА С ЗАКАЗАМИ
-        function renderOrders() {
+        /* --- 3. ЗАКАЗЫ --- */
+        function renderOrders(filter = 'all', search = '') {
+            currentFilter = filter;
             const view = document.getElementById('main-view');
-            view.innerHTML = '<h2>СПИСОК ЗАКАЗОВ</h2>';
+            
+            // Шапка с фильтрами и поиском
+            view.innerHTML = `
+                <div class="filters">
+                    <button class="filter-chip ${filter==='all'?'active':''}" onclick="renderOrders('all')">Все</button>
+                    <button class="filter-chip ${filter==='free'?'active':''}" onclick="renderOrders('free')">Свободные</button>
+                    <button class="filter-chip ${filter==='process'?'active':''}" onclick="renderOrders('process')">В работе</button>
+                    <button class="filter-chip ${filter==='closed'?'active':''}" onclick="renderOrders('closed')">Готовые</button>
+                    <button class="filter-chip ${filter==='archived'?'active':''}" onclick="renderOrders('archived')">Архив</button>
+                </div>
+                <input style="margin-bottom:20px;" placeholder="🔍 Поиск (клиент, описание)..." onkeyup="renderOrders('${filter}', this.value)" value="${search}">
+            `;
 
-            if (DB.orders.length === 0) {
-                view.innerHTML += '<p style="color:gray">Заказов пока нет.</p>';
-                return;
-            }
+            let list = DB.orders.filter(o => {
+                let sMatch = (filter === 'all' && o.status !== 'archived') || (o.status === filter);
+                let tMatch = o.client.toLowerCase().includes(search.toLowerCase()) || o.desc.toLowerCase().includes(search.toLowerCase());
+                return sMatch && tMatch;
+            });
 
-            DB.orders.forEach((ord, idx) => {
+            if (list.length === 0) view.innerHTML += '<div style="text-align:center; color:#444; margin-top:40px;">Заказов не найдено</div>';
+
+            list.forEach((ord) => {
+                let idx = DB.orders.indexOf(ord);
+                
+                // Дедлайн логика
+                let isLate = (ord.status !== 'closed' && ord.status !== 'archived' && ord.date <= new Date().toISOString().split('T')[0]);
+                let dateHTML = `<span class="${isLate ? 'deadline-hot' : ''}" style="font-size:0.8rem; color:#888;">📅 ${ord.date} ${isLate ? '(СРОК!)' : ''}</span>`;
+
+                // Кнопки управления
                 let actionBtn = '';
-                if (ord.status === 'free') {
-                    actionBtn = `<button style="background:#00ff00; color:black; border:none; margin-top:10px;" onclick="setStatus(${idx}, 'process')">ВЗЯТЬ В РАБОТУ</button>`;
-                } else if (ord.status === 'process' && currentUser.role === 'programmer') { // Программист сдает
-                     actionBtn = `<button style="background:yellow; color:black; border:none; margin-top:10px;" onclick="setStatus(${idx}, 'closed')">СДАТЬ ЗАКАЗ</button>`;
+                if (ord.status === 'free') actionBtn = `<button style="background:#00ff00; color:black; width:auto; padding:5px 15px;" onclick="setStatus(${idx}, 'process')">ВЗЯТЬ</button>`;
+                else if (ord.status === 'process') actionBtn = `<button style="background:yellow; color:black; width:auto; padding:5px 15px;" onclick="setStatus(${idx}, 'closed')">ЗАВЕРШИТЬ</button>`;
+
+                // Доп. кнопки для Директора/Менеджера
+                let adminBtns = '';
+                if (['director', 'manager'].includes(currentUser.role) && ord.status !== 'archived') {
+                    adminBtns = `
+                        <button onclick="editOrder(${idx})" style="background:none; border:none; color:#aaa; font-size:0.8rem; cursor:pointer;">✏️</button>
+                        <button onclick="setStatus(${idx}, 'archived')" style="background:none; border:none; color:#aaa; font-size:0.8rem; cursor:pointer;">🗑️</button>
+                    `;
                 }
 
+                // Заметки
+                let notesHTML = (ord.notes || []).map(n => `<div style="border-bottom:1px solid #222; padding:3px 0;">- ${n}</div>`).join('');
+
                 view.innerHTML += `
-                    <div class="order-card">
-                        <div style="display:flex; justify-content:space-between;">
-                            <strong>${ord.client}</strong>
-                            <small>${ord.date}</small>
+                    <div class="order-card" style="${isLate ? 'border-color:#500;' : ''}">
+                        <div class="order-header">
+                            <div>
+                                <h3 style="margin:0; display:flex; align-items:center; gap:10px;">${ord.client} ${adminBtns}</h3>
+                                <div style="font-size:0.85rem; color:#aaa; margin-top:5px;">${ord.desc}</div>
+                            </div>
+                            <div class="price-tag">${ord.price} c</div>
                         </div>
-                        <p>${ord.desc}</p>
-                        <p style="color: #888;">Статус: <b class="${getStatusColor(ord.status)}">${ord.status.toUpperCase()}</b></p>
-                        ${actionBtn}
+
+                        <div class="notes-area">
+                            ${notesHTML}
+                            <div class="add-note" onclick="addNote(${idx})">+ Заметка</div>
+                        </div>
+
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:15px; border-top:1px solid #222; padding-top:10px;">
+                            <div>
+                                ${dateHTML}
+                                <span class="status-badge st-${ord.status}" style="margin-left:10px;">${ord.status}</span>
+                            </div>
+                            ${actionBtn}
+                        </div>
                     </div>
                 `;
             });
         }
 
+        /* --- 4. СОЗДАНИЕ И РЕДАКТИРОВАНИЕ --- */
         function renderAddOrder() {
-            const view = document.getElementById('main-view');
-            view.innerHTML = `
-                <h2>СОЗДАНИЕ ЗАКАЗА</h2>
-                <input id="new-client" placeholder="Имя клиента">
-                <input id="new-phone" placeholder="Номер клиента">
-                <textarea id="new-desc" placeholder="ТЗ, описание, ссылки..." style="width:100%; height:100px; background:black; color:white; border:1px solid white;"></textarea>
-                <input type="date" id="new-date" style="background:white; color:black;">
-                <button class="btn-white" style="margin-top:10px;" onclick="addOrder()">ДОБАВИТЬ В БАЗУ</button>
+            document.getElementById('main-view').innerHTML = `
+                <h2>Новый заказ</h2>
+                <input id="n-client" placeholder="Клиент">
+                <input type="number" id="n-price" placeholder="Бюджет (сом)" style="border-color:#ffd700;">
+                <textarea id="n-desc" placeholder="ТЗ..." style="width:100%; height:100px; background:#111; color:white; border:1px solid #333; padding:10px;"></textarea>
+                <input type="date" id="n-date">
+                <button class="btn-primary" onclick="addOrder()">ОПУБЛИКОВАТЬ</button>
+                <button class="btn-outline" onclick="renderOrders()">ОТМЕНА</button>
             `;
         }
 
         function addOrder() {
-            const client = document.getElementById('new-client').value;
-            const desc = document.getElementById('new-desc').value;
-            const date = document.getElementById('new-date').value;
-
-            DB.orders.push({
-                client, desc, date, 
-                status: 'free', // free, process, closed
-                worker: null
-            });
-            saveDB();
-            updateStats();
-            alert('Заказ добавлен!');
-            renderOrders();
+            let client = document.getElementById('n-client').value;
+            let price = document.getElementById('n-price').value || 0;
+            let desc = document.getElementById('n-desc').value;
+            let date = document.getElementById('n-date').value;
+            if(!client || !date) { showToast('Заполните поля!', 'error'); return; }
+            DB.orders.push({ client, price, desc, date, status: 'free', notes: [] });
+            saveDB(); showToast('Заказ создан'); renderOrders();
         }
 
-        function setStatus(idx, status) {
-            DB.orders[idx].status = status;
-            if (status === 'process') DB.orders[idx].worker = currentUser.name;
-            saveDB();
-            updateStats();
-            renderOrders();
+        function editOrder(idx) {
+            let ord = DB.orders[idx];
+            let newP = prompt('Новая цена:', ord.price);
+            let newD = prompt('Новое описание:', ord.desc);
+            if(newP !== null && newD !== null) {
+                ord.price = newP; ord.desc = newD;
+                saveDB(); renderOrders(currentFilter);
+            }
         }
 
-        // 6. СОТРУДНИКИ
+        function addNote(idx) {
+            let txt = prompt("Текст заметки:");
+            if(txt) {
+                if(!DB.orders[idx].notes) DB.orders[idx].notes = [];
+                DB.orders[idx].notes.push(txt);
+                saveDB(); renderOrders(currentFilter);
+            }
+        }
+
+        function setStatus(idx, st) {
+            DB.orders[idx].status = st;
+            if(st === 'closed') {
+                // Ищем того, кто закрыл, и даем опыт (упрощенно)
+                // В идеале: сохранять worker в заказе
+                showToast('Заказ закрыт! +XP');
+            }
+            saveDB(); updateStats(); renderOrders(currentFilter);
+        }
+
+        /* --- 5. СОТРУДНИКИ И РАНГИ --- */
         function renderStaff() {
             const view = document.getElementById('main-view');
-            view.innerHTML = '<h2>НАШИ СОТРУДНИКИ</h2>';
+            view.innerHTML = '<h2>Рейтинг Команды</h2>';
             
-            DB.users.forEach((u, idx) => {
+            let sorted = [...DB.users].sort((a,b) => (b.xp||0) - (a.xp||0));
+
+            sorted.forEach(u => {
+                let rank = getRank(u.xp || 0);
                 view.innerHTML += `
-                    <div class="order-card">
-                        <h3>${u.name}</h3>
-                        <p>${u.role}</p>
-                        <p>${u.phone}</p>
-                        ${currentUser.role === 'director' ? `<button style="color:red; border:1px solid red; background:transparent;" onclick="fireUser(${idx})">УВОЛИТЬ</button>` : ''}
+                    <div class="order-card" style="display:flex; justify-content:space-between; align-items:center; border-left:4px solid ${rank.color}">
+                        <div style="display:flex; align-items:center; gap:15px;">
+                            <div class="avatar">${u.name[0]}</div>
+                            <div>
+                                <h3 style="margin:0">${u.name} <span class="rank-badge" style="background:${rank.color}; color:white;">${rank.name}</span></h3>
+                                <p style="margin:0; color:#666; font-size:0.8rem;">${u.role} | XP: ${u.xp||0}</p>
+                            </div>
+                        </div>
+                        ${currentUser.role === 'director' ? `<button onclick="fire('${u.phone}')" style="color:red; background:none; border:none; cursor:pointer;">❌</button>` : ''}
                     </div>
                 `;
             });
         }
 
-        function fireUser(idx) {
-            if(confirm('Точно уволить?')) {
-                DB.users.splice(idx, 1);
-                saveDB();
-                renderStaff();
-            }
+        function getRank(xp) {
+            if(xp >= 10) return { name: 'SENIOR', color: '#ff00ff' };
+            if(xp >= 3) return { name: 'MIDDLE', color: '#0055ff' };
+            return { name: 'JUNIOR', color: '#555' };
         }
 
-        // ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ
-        function saveDB() {
-            localStorage.setItem('sab_db', JSON.stringify(DB));
-        }
-
+        /* --- 6. СИСТЕМНЫЕ ФУНКЦИИ --- */
+        function saveDB() { localStorage.setItem('sab_db_ultimate', JSON.stringify(DB)); }
+        
         function updateStats() {
-            document.getElementById('c-free').innerText = DB.orders.filter(o => o.status === 'free').length;
-            document.getElementById('c-work').innerText = DB.orders.filter(o => o.status === 'process').length;
-            document.getElementById('c-closed').innerText = DB.orders.filter(o => o.status === 'closed').length;
+            document.getElementById('s-free').innerText = DB.orders.filter(o => o.status === 'free').length;
+            document.getElementById('s-work').innerText = DB.orders.filter(o => o.status === 'process').length;
+            document.getElementById('s-closed').innerText = DB.orders.filter(o => o.status === 'closed').length;
+            let money = DB.orders.filter(o => o.status === 'closed').reduce((acc, v) => acc + Number(v.price), 0);
+            document.getElementById('s-money').innerText = money + ' c';
         }
 
-        function getStatusColor(s) {
-            if (s === 'free') return 'status-free';
-            if (s === 'process') return 'status-work';
-            return 'status-closed';
+        function showToast(msg, type='ok') {
+            let box = document.createElement('div');
+            box.className = 'toast';
+            box.innerHTML = (type==='error'?'⚠️ ':'✅ ') + msg;
+            box.style.borderLeft = type==='error'?'5px solid red':'5px solid green';
+            document.getElementById('toast-container').appendChild(box);
+            setTimeout(() => box.remove(), 3000);
         }
 
-        function logout() {
-            location.reload();
-        }
-    </script>
-</body>
-</html>
+        function showReg() { document.getElementById('login-screen').style.display='none'; document.getElementById('reg-screen').style.display='flex'; }
+        
+        function doReg() {
+            let n=document.getElementById('r-name').value;
+            let p=document.getElementById('r-phone').value;
+            let pass=document.getElementById('r-pass').value;
+            if(p==='705163333' || DB.users.find(u=>u.phone===p)) { showToast('Номер занят', 'error'); return; }
+            DB.u
