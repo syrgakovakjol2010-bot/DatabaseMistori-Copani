@@ -3,94 +3,256 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>M.C. ONLINE SYSTEM</title>
+    <title>M.C. ENTERPRISE SYSTEM</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800;900&display=swap" rel="stylesheet">
+    
     <style>
-        /* --- ДИЗАЙН MISTORI COPANI --- */
+        /* =========================================
+           1. ДИЗАЙН СИСТЕМЫ (CSS)
+           ========================================= */
         :root {
-            --bg: #050505;
-            --card: #111;
+            --bg: #000000;
+            --sidebar: #050505;
+            --card: #0f0f0f;
+            --input: #151515;
             --border: #222;
-            --text: #fff;
+            --text-main: #ffffff;
+            --text-dim: #888888;
+            
             --gold: #FFD700;
-            --green: #00FF88;
-            --red: #FF4444;
-            --blue: #0088FF;
+            --green: #00E676;
+            --red: #FF1744;
+            --blue: #2979FF;
+            --purple: #D500F9;
         }
+
         * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; outline: none; }
-        body { background: var(--bg); color: var(--text); font-family: sans-serif; margin: 0; padding: 0; height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
+        
+        body {
+            background-color: var(--bg);
+            color: var(--text-main);
+            font-family: 'Inter', sans-serif;
+            margin: 0; padding: 0;
+            height: 100vh; overflow: hidden;
+            display: flex; flex-direction: column;
+        }
 
-        /* ЭКРАН ЗАГРУЗКИ */
-        #loader { position: fixed; inset: 0; background: #000; z-index: 9999; display: flex; align-items: center; justify-content: center; flex-direction: column; transition: 0.5s; }
-        .spinner { width: 50px; height: 50px; border: 5px solid #333; border-top: 5px solid var(--text); border-radius: 50%; animation: spin 1s infinite linear; }
+        /* --- ЗАСТАВКА (SPLASH SCREEN) --- */
+        #splash-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #000; z-index: 9999;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            transition: opacity 0.8s ease;
+        }
+        .loader-ring {
+            width: 50px; height: 50px; border: 4px solid #222;
+            border-top: 4px solid #fff; border-radius: 50%;
+            animation: spin 1s linear infinite; margin-bottom: 20px;
+        }
+        .splash-text { letter-spacing: 5px; font-weight: 900; animation: pulse 2s infinite; }
         @keyframes spin { 100% { transform: rotate(360deg); } }
+        @keyframes pulse { 50% { opacity: 0.5; } }
 
-        /* ВХОД */
-        #auth-screen { position: fixed; inset: 0; background: #000; z-index: 5000; display: flex; align-items: center; justify-content: center; padding: 20px; }
-        .auth-box { width: 100%; max-width: 350px; background: var(--card); border: 1px solid var(--border); padding: 40px 30px; border-radius: 20px; text-align: center; }
+        /* --- ВХОД В СИСТЕМУ --- */
+        #auth-container {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #000; z-index: 5000;
+            display: flex; align-items: center; justify-content: center; padding: 20px;
+        }
+        .auth-box {
+            width: 100%; max-width: 400px; background: var(--card);
+            border: 1px solid var(--border); padding: 40px;
+            border-radius: 24px; text-align: center;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+        }
+        .auth-logo { font-size: 3rem; font-weight: 900; letter-spacing: 8px; margin-bottom: 5px; }
         
-        input, textarea { width: 100%; padding: 15px; margin: 10px 0; background: #1a1a1a; border: 1px solid #333; color: #fff; border-radius: 12px; font-size: 16px; }
-        .btn { width: 100%; padding: 15px; border-radius: 12px; font-weight: bold; border: none; cursor: pointer; text-transform: uppercase; margin-top: 10px; font-size: 14px; }
-        .btn-main { background: #fff; color: #000; }
-        
-        /* ПРИЛОЖЕНИЕ */
-        #app { display: none; height: 100%; width: 100%; flex-direction: column; }
-        .top-bar { height: 70px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; padding: 0 25px; background: rgba(0,0,0,0.9); }
-        .view-area { flex: 1; overflow-y: auto; padding: 20px; padding-bottom: 100px; }
+        input, textarea, select {
+            width: 100%; padding: 16px; margin: 10px 0;
+            background: var(--input); border: 1px solid #333;
+            color: #fff; border-radius: 12px; font-size: 16px;
+            transition: 0.3s;
+        }
+        input:focus { border-color: #fff; background: #000; }
 
-        /* ЭЛЕМЕНТЫ */
-        .card { background: var(--card); border: 1px solid var(--border); padding: 20px; border-radius: 16px; margin-bottom: 15px; position: relative; }
-        .price { position: absolute; top: 20px; right: 20px; color: var(--gold); border: 1px solid var(--gold); padding: 4px 10px; border-radius: 6px; font-weight: bold; font-size: 0.9rem; }
+        .btn {
+            width: 100%; padding: 16px; border-radius: 12px;
+            font-weight: 800; border: none; cursor: pointer;
+            text-transform: uppercase; margin-top: 10px; font-size: 14px;
+            transition: 0.2s;
+        }
+        .btn:active { transform: scale(0.98); }
+        .btn-primary { background: #fff; color: #000; }
+        .btn-outline { background: transparent; border: 1px solid #333; color: var(--text-dim); }
         
+        /* --- ИНТЕРФЕЙС ПРИЛОЖЕНИЯ --- */
+        #app-layout { display: none; height: 100%; width: 100%; }
+
+        /* САЙДБАР (Для Компьютера) */
+        .sidebar {
+            width: 280px; background: var(--sidebar);
+            border-right: 1px solid var(--border);
+            display: flex; flex-direction: column; padding: 30px;
+        }
+        .brand { font-size: 1.5rem; font-weight: 900; letter-spacing: 3px; margin-bottom: 40px; display: flex; align-items: center; gap: 10px; }
+        .menu-items { flex: 1; display: flex; flex-direction: column; gap: 8px; }
+        .menu-link {
+            background: transparent; border: none; color: var(--text-dim);
+            padding: 14px 18px; border-radius: 12px; text-align: left;
+            cursor: pointer; font-weight: 600; font-size: 0.9rem;
+            transition: 0.2s; display: flex; align-items: center; gap: 10px;
+        }
+        .menu-link.active, .menu-link:hover { background: #111; color: #fff; }
+
+        /* ГЛАВНАЯ ОБЛАСТЬ */
+        .main-content { flex: 1; display: flex; flex-direction: column; position: relative; }
+        
+        .top-header {
+            height: 70px; border-bottom: 1px solid var(--border);
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 0 25px; background: rgba(0,0,0,0.8); backdrop-filter: blur(10px);
+        }
+        .user-profile { display: flex; align-items: center; gap: 12px; }
+        .avatar {
+            width: 38px; height: 38px; background: #222;
+            border-radius: 50%; display: flex; align-items: center;
+            justify-content: center; font-weight: bold; border: 1px solid #333;
+        }
+
+        .scroll-container { flex: 1; overflow-y: auto; padding: 25px; padding-bottom: 100px; }
+
+        /* КАРТОЧКИ И ЭЛЕМЕНТЫ */
+        .card {
+            background: var(--card); border: 1px solid var(--border);
+            padding: 22px; border-radius: 18px; margin-bottom: 16px;
+            position: relative; transition: 0.3s;
+        }
+        .card:hover { border-color: #444; }
+
+        .price-badge {
+            position: absolute; top: 22px; right: 22px;
+            color: var(--gold); border: 1px solid var(--gold);
+            padding: 4px 10px; border-radius: 8px; font-weight: 800;
+        }
+
+        .ref-box {
+            background: #080808; border: 1px dashed #333;
+            padding: 12px; border-radius: 10px; font-size: 0.8rem;
+            color: var(--blue); margin-top: 10px; word-break: break-all;
+        }
+
+        .status-pill {
+            display: inline-block; padding: 4px 10px; border-radius: 6px;
+            font-size: 0.65rem; text-transform: uppercase; font-weight: bold;
+            border: 1px solid #333; margin-top: 12px;
+        }
+
         /* ЧАТ */
-        .chat-wrap { display: flex; flex-direction: column; height: 100%; }
-        .msgs { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; padding: 10px; }
-        .msg { padding: 12px 16px; border-radius: 16px; max-width: 80%; font-size: 0.95rem; }
-        .msg-me { align-self: flex-end; background: #fff; color: #000; border-bottom-right-radius: 2px; }
-        .msg-other { align-self: flex-start; background: #222; color: #fff; border-bottom-left-radius: 2px; }
-        .input-box { display: flex; gap: 10px; padding: 15px; border-top: 1px solid var(--border); background: #000; }
+        .chat-container { display: flex; flex-direction: column; height: 100%; }
+        .chat-feed { flex: 1; overflow-y: auto; padding: 10px; display: flex; flex-direction: column; gap: 12px; }
+        .msg { padding: 12px 16px; border-radius: 16px; max-width: 85%; font-size: 0.95rem; line-height: 1.4; position: relative; }
+        .msg-mine { align-self: flex-end; background: #fff; color: #000; border-bottom-right-radius: 4px; }
+        .msg-other { align-self: flex-start; background: #1a1a1a; border: 1px solid #333; border-bottom-left-radius: 4px; }
+        .msg-meta { font-size: 0.65rem; opacity: 0.6; margin-bottom: 4px; display: block; }
+        .chat-input-area { display: flex; gap: 10px; padding: 15px; border-top: 1px solid var(--border); background: #000; }
 
-        /* МЕНЮ */
-        .nav { position: fixed; bottom: 0; width: 100%; background: #080808; border-top: 1px solid var(--border); display: flex; justify-content: space-around; padding: 15px 0; z-index: 1000; }
-        .nav-btn { background: none; border: none; color: #666; font-size: 0.65rem; font-weight: bold; display: flex; flex-direction: column; align-items: center; gap: 5px; }
-        .nav-btn.active { color: #fff; }
+        /* КОМАНДА */
+        .warn-dots { display: flex; gap: 4px; margin-top: 8px; }
+        .dot { width: 8px; height: 8px; background: #222; border-radius: 50%; }
+        .dot.active { background: var(--red); box-shadow: 0 0 8px var(--red); }
 
+        /* НИЖНЕЕ МЕНЮ (МОБИЛЬНОЕ) */
+        .mobile-nav {
+            display: none; position: fixed; bottom: 0; width: 100%;
+            background: rgba(8,8,8,0.95); backdrop-filter: blur(10px);
+            border-top: 1px solid var(--border);
+            justify-content: space-around; padding: 12px 0; z-index: 2000;
+        }
+        .mob-btn {
+            background: none; border: none; color: #555;
+            font-size: 0.6rem; font-weight: bold; display: flex;
+            flex-direction: column; align-items: center; gap: 5px;
+        }
+        .mob-btn.active { color: #fff; }
+
+        /* УВЕДОМЛЕНИЯ */
+        #toast {
+            position: fixed; top: 30px; left: 50%; transform: translateX(-50%);
+            background: #fff; color: #000; padding: 12px 30px; border-radius: 50px;
+            font-weight: 800; z-index: 10000; display: none; box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+        }
+
+        /* АДАПТИВНОСТЬ */
+        @media (max-width: 900px) {
+            .sidebar { display: none; }
+            .mobile-nav { display: flex; }
+            .top-header { padding: 0 15px; }
+            .scroll-container { padding: 15px; }
+        }
+        
         .hidden { display: none !important; }
     </style>
 </head>
 <body>
 
-    <div id="loader">
-        <div class="spinner"></div>
-        <p style="margin-top:20px; color:#666; letter-spacing:2px;">MISTORI COPANI</p>
+    <div id="splash-screen">
+        <div class="loader-ring"></div>
+        <div class="splash-text">MISTORI COPANI</div>
     </div>
 
-    <div id="auth-screen">
+    <div id="toast">Сообщение</div>
+
+    <div id="auth-container">
         <div class="auth-box">
-            <h1 style="letter-spacing:5px; margin-bottom:5px;">M.C.</h1>
-            <p style="color:#666; font-size:0.7rem; margin-bottom:30px;">ONLINE SYSTEM</p>
+            <h1 class="auth-logo">M.C.</h1>
+            <p style="color:#666; font-size:0.75rem; letter-spacing:2px; margin-bottom:30px;">ENTERPRISE SYSTEM v35</p>
+            
             <input type="text" id="ph" placeholder="Номер (705163333)">
             <input type="password" id="ps" placeholder="Пароль">
-            <button class="btn btn-main" onclick="window.doLogin()">ВОЙТИ В СИСТЕМУ</button>
-            <p id="error-msg" style="color:var(--red); font-size:0.8rem; margin-top:15px;"></p>
+            
+            <button class="btn btn-primary" onclick="window.appLogin()">ВОЙТИ</button>
+            <p id="login-error" style="color:var(--red); font-size:0.8rem; margin-top:15px;"></p>
         </div>
     </div>
 
-    <div id="app">
-        <div class="top-bar">
-            <div>
-                <b id="u-name">...</b> <br>
-                <small id="u-role" style="color:var(--green); text-transform:uppercase; font-size:0.6rem;">...</small>
+    <div id="app-layout">
+        <div class="sidebar">
+            <div class="brand">
+                <div style="width:30px; height:30px; background:#fff; border-radius:6px;"></div>
+                MISTORI
             </div>
-            <div style="font-weight:900; opacity:0.3; letter-spacing:2px;">ONLINE</div>
+            <div class="menu-items">
+                <button class="menu-link active" id="d-orders" onclick="window.nav('orders')">📦 ЗАКАЗЫ</button>
+                <button class="menu-link" id="d-chat" onclick="window.nav('chat')">💬 ЧАТ</button>
+                <button class="menu-link" id="d-team" onclick="window.nav('team')">👥 КОМАНДА</button>
+                <button class="menu-link" id="d-fin" onclick="window.nav('fin')">📊 КАССА</button>
+                <button class="menu-link" id="d-add" onclick="window.nav('add')" style="color:var(--green)">➕ СОЗДАТЬ</button>
+            </div>
+            <button class="menu-link" onclick="location.reload()" style="color:var(--red); margin-top:auto;">ВЫХОД</button>
         </div>
 
-        <div id="view" class="view-area"></div>
+        <div class="main-content">
+            <div class="top-header">
+                <div class="user-profile">
+                    <div class="avatar" id="u-ava">A</div>
+                    <div>
+                        <b id="u-name" style="display:block; line-height:1;">...</b>
+                        <small id="u-role" style="font-size:0.6rem; color:var(--green); text-transform:uppercase;">...</small>
+                    </div>
+                </div>
+                <div style="font-weight:900; opacity:0.2; letter-spacing:3px;">ONLINE</div>
+            </div>
 
-        <div class="nav">
-            <button class="nav-btn active" id="n-orders" onclick="window.nav('orders')">📦<br>ЗАКАЗЫ</button>
-            <button class="nav-btn" id="n-add" onclick="window.nav('add')">➕<br>НОВЫЙ</button>
-            <button class="nav-btn" id="n-chat" onclick="window.nav('chat')">💬<br>ЧАТ</button>
-            <button class="nav-btn" id="n-team" onclick="window.nav('team')">👥<br>КОМАНДА</button>
+            <div class="scroll-container" id="view"></div>
+        </div>
+
+        <div class="mobile-nav">
+            <button class="mob-btn active" id="m-orders" onclick="window.nav('orders')">📦<br>ЗАКАЗЫ</button>
+            <button class="mob-btn" id="m-chat" onclick="window.nav('chat')">💬<br>ЧАТ</button>
+            <button class="mob-btn" id="m-add" onclick="window.nav('add')" style="color:var(--green); transform:scale(1.2);">➕</button>
+            <button class="mob-btn" id="m-team" onclick="window.nav('team')">👥<br>ЛЮДИ</button>
+            <button class="mob-btn" id="m-fin" onclick="window.nav('fin')">📊<br>КАССА</button>
         </div>
     </div>
 
@@ -98,192 +260,173 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getDatabase, ref, push, onValue, update, remove, get, child } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-        // ТВОИ НАСТРОЙКИ (Я ВСТАВИЛ ИХ СЮДА)
+        // ⚠️ ВСТАВЬ СВОИ КЛЮЧИ СЮДА ⚠️
         const firebaseConfig = {
-            apiKey: "AIzaSyCaH7PIEizuk4BlYu0WqFADrxnc1t984mI",
+            apiKey: "ВСТАВЬ_СЮДА_API_KEY",
             authDomain: "mistori-copani.firebaseapp.com",
             databaseURL: "https://mistori-copani-default-rtdb.firebaseio.com",
             projectId: "mistori-copani",
-            storageBucket: "mistori-copani.firebasestorage.app",
-            messagingSenderId: "1009680617583",
-            appId: "1:1009680617583:web:59a2f6fb9B56b8c8ebfd9a",
-            measurementId: "G-SBZXK8JSX8"
+            storageBucket: "mistori-copani.appspot.com",
+            messagingSenderId: "ВСТАВЬ_ID",
+            appId: "ВСТАВЬ_APP_ID"
         };
 
+        // Запуск
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
+        // Переменные
         let ME = null;
-        let ORDERS = {};
-        let USERS = {};
-        let CHAT = {};
+        let DATA = { orders: {}, users: {}, chat: {} };
 
         // --- ЛОГИКА ВХОДА ---
-        window.doLogin = async () => {
+        window.appLogin = async () => {
             const p = document.getElementById('ph').value.trim();
             const s = document.getElementById('ps').value.trim();
-            const err = document.getElementById('error-msg');
+            const err = document.getElementById('login-error');
 
-            // Главный админ (Ты)
-            if(p === '705163333' && s === 'admin123') {
-                return loginSuccess({ name: "Акжол", phone: p, role: "director", xp: 999 });
-            }
+            if(!p || !s) { err.innerText = "Введите данные"; return; }
 
-            // Менеджер (Сезим) - создадим её, если нет
-            if(p === '777800603' && s === 'admin2') {
-                return loginSuccess({ name: "Сезим", phone: p, role: "manager", xp: 10 });
-            }
+            // Жесткий вход для Директора и Менеджера
+            if(p === '705163333' && s === 'admin123') return loginSuccess({name:"Акжол", phone:p, role:"director", xp:999});
+            if(p === '777800603' && s === 'admin2') return loginSuccess({name:"Сезим", phone:p, role:"manager", xp:10});
 
-            // Обычный вход (проверяем базу)
-            const snapshot = await get(child(ref(db), `users/${p}`));
-            if (snapshot.exists()) {
-                const user = snapshot.val();
+            // Проверка обычного сотрудника
+            const snap = await get(child(ref(db), `users/${p}`));
+            if (snap.exists()) {
+                const user = snap.val();
                 if(user.pass === s) loginSuccess(user);
                 else err.innerText = "Неверный пароль";
             } else {
-                // Если сотрудника нет - регистрируем как программиста
-                const newName = prompt("Вас нет в базе. Введите имя для регистрации:");
-                if(newName) {
-                    const newUser = { name: newName, phone: p, pass: s, role: "programmer", xp: 0 };
-                    await update(ref(db, 'users/' + p), newUser);
-                    loginSuccess(newUser);
-                } else {
-                    err.innerText = "Вход отменен";
+                // Авто-регистрация для теста
+                if(confirm("Вас нет в базе. Создать аккаунт?")) {
+                    const name = prompt("Ваше Имя:");
+                    if(name) {
+                        const newUser = { name, phone: p, pass: s, role: "programmer", xp: 0, warns: 0 };
+                        loginSuccess(newUser);
+                    }
                 }
             }
         };
 
         function loginSuccess(user) {
             ME = user;
-            // Обновляем данные пользователя в облаке
+            // Обновляем данные в облаке (чтобы директор видел)
             update(ref(db, 'users/' + ME.phone), ME);
             
-            document.getElementById('auth-screen').style.display = 'none';
-            document.getElementById('app').style.display = 'flex';
+            document.getElementById('auth-container').style.display = 'none';
+            document.getElementById('app-layout').style.display = 'flex';
             document.getElementById('u-name').innerText = ME.name;
             document.getElementById('u-role').innerText = ME.role;
+            document.getElementById('u-ava').innerText = ME.name[0];
+            
             window.nav('orders');
         }
 
         // --- НАВИГАЦИЯ ---
         window.nav = (screen) => {
             const v = document.getElementById('view');
-            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById('n-'+screen).classList.add('active');
+            // Сброс кнопок
+            document.querySelectorAll('.menu-link, .mob-btn').forEach(b => b.classList.remove('active'));
+            if(document.getElementById('d-'+screen)) document.getElementById('d-'+screen).classList.add('active');
+            if(document.getElementById('m-'+screen)) document.getElementById('m-'+screen).classList.add('active');
+            
             v.innerHTML = '';
-
+            
             if(screen === 'orders') renderOrders(v);
-            if(screen === 'add') renderAdd(v);
             if(screen === 'chat') renderChat(v);
             if(screen === 'team') renderTeam(v);
+            if(screen === 'fin') renderFin(v);
+            if(screen === 'add') renderAdd(v);
         };
 
         // --- ЭКРАНЫ ---
         function renderOrders(el) {
             el.innerHTML = '<div id="list"></div>';
             const list = document.getElementById('list');
+            const arr = Object.entries(DATA.orders || {}).reverse();
             
-            // Превращаем объект в массив и сортируем
-            const arr = Object.entries(ORDERS || {}).reverse();
-            if(arr.length === 0) { list.innerHTML = '<p style="text-align:center; color:#666; margin-top:50px;">Заказов пока нет</p>'; return; }
+            if(arr.length === 0) { list.innerHTML = '<center style="margin-top:50px; color:#555">Нет активных заказов</center>'; return; }
 
-            arr.forEach(([key, o]) => {
+            arr.forEach(([k, o]) => {
                 if(o.status === 'archive') return;
                 
                 let btns = '';
-                if(o.status === 'new') btns = `<button class="btn-main" style="background:var(--green); border:none; padding:8px 15px; border-radius:8px;" onclick="window.upd('${key}','work')">ВЗЯТЬ</button>`;
-                if(o.status === 'work') btns = `<button class="btn-main" style="background:var(--gold); border:none; padding:8px 15px; border-radius:8px;" onclick="window.upd('${key}','done')">ГОТОВО</button>`;
+                if(o.status === 'new') btns = `<button class="btn btn-primary" onclick="window.upd('${k}','work')">ВЗЯТЬ В РАБОТУ</button>`;
+                if(o.status === 'work') btns = `<button class="btn btn-primary" style="background:var(--gold)" onclick="window.upd('${k}','done')">ЗАВЕРШИТЬ</button>`;
                 
                 list.innerHTML += `
-                    <div class="card">
-                        <div class="price">${o.price} с</div>
-                        <b style="font-size:1.1rem">${o.client}</b>
+                    <div class="card" style="${o.status==='reject'?'opacity:0.5':''}">
+                        <div class="price-badge">${o.price} с</div>
+                        <h3 style="margin:0">${o.client}</h3>
                         <p style="color:#aaa; font-size:0.9rem; margin:10px 0;">${o.desc}</p>
-                        ${o.ref ? `<div style="background:#111; padding:8px; border-radius:5px; font-size:0.8rem; color:var(--blue); margin-bottom:10px;">🔗 ${o.ref}</div>` : ''}
-                        <div style="font-size:0.7rem; text-transform:uppercase; color:#666; margin-bottom:15px;">Статус: ${o.status}</div>
-                        <div style="display:flex; gap:10px;">
+                        ${o.ref ? `<div class="ref-box">🔗 ${o.ref}</div>` : ''}
+                        
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <span class="status-pill" style="border-color:${getColor(o.status)}; color:${getColor(o.status)}">${o.status}</span>
+                            <small style="color:#555">${formatDate(o.date)}</small>
+                        </div>
+                        
+                        <div style="display:flex; gap:10px; margin-top:20px;">
                             ${btns}
-                            ${ME.role === 'director' ? `<button onclick="window.upd('${key}','archive')" style="background:none; border:none; color:var(--red);">DEL</button>` : ''}
+                            ${ME.role !== 'programmer' && o.status !== 'reject' ? `<button class="btn btn-outline" style="color:var(--red)" onclick="window.upd('${k}','reject')">ОТКАЗ</button>` : ''}
+                            ${ME.role === 'director' ? `<button class="btn btn-outline" style="width:auto;" onclick="window.upd('${k}','archive')">DEL</button>` : ''}
                         </div>
                     </div>
                 `;
             });
-        }
-
-        function renderAdd(el) {
-            if(ME.role === 'programmer') { el.innerHTML = '<center style="margin-top:50px; color:#666">Нет прав для создания</center>'; return; }
-            el.innerHTML = `
-                <h3>НОВЫЙ ЗАКАЗ</h3>
-                <input id="c" placeholder="Клиент">
-                <input id="p" type="number" placeholder="Бюджет">
-                <textarea id="d" placeholder="ТЗ / Описание" style="height:100px"></textarea>
-                <input id="r" placeholder="Ссылка на референс">
-                <button class="btn btn-main" onclick="window.addOrder()">ОПУБЛИКОВАТЬ</button>
-            `;
         }
 
         function renderChat(el) {
             el.innerHTML = `
-                <div class="chat-wrap">
-                    <div class="msgs" id="chat-feed"></div>
-                    <div class="input-box">
-                        <input id="msg-in" placeholder="Сообщение..." style="margin:0">
-                        <button class="btn-main" style="width:50px; margin:0; border-radius:10px;" onclick="window.send()">></button>
+                <div class="chat-container">
+                    <div class="chat-feed" id="feed"></div>
+                    <div class="chat-input-area">
+                        <input id="chat-msg" placeholder="Сообщение..." style="margin:0">
+                        <button class="btn btn-primary" style="width:60px; margin:0" onclick="window.send()">></button>
                     </div>
                 </div>
             `;
-            drawChat();
+            setTimeout(drawChat, 100);
+        }
+
+        function drawChat() {
+            const f = document.getElementById('feed');
+            if(!f) return;
+            f.innerHTML = '';
+            Object.values(DATA.chat || {}).forEach(m => {
+                const me = m.user === ME.name;
+                f.innerHTML += `
+                    <div class="msg ${me ? 'msg-mine' : 'msg-other'}">
+                        <span class="msg-meta">${m.user} (${m.role})</span>
+                        ${m.text}
+                    </div>
+                `;
+            });
+            f.scrollTop = f.scrollHeight;
         }
 
         function renderTeam(el) {
-            el.innerHTML = '<h3>КОМАНДА</h3>';
-            Object.values(USERS || {}).forEach(u => {
+            el.innerHTML = '<h3>СОТРУДНИКИ</h3>';
+            Object.values(DATA.users || {}).forEach(u => {
+                let dots = '';
+                for(let i=1; i<=3; i++) dots += `<div class="dot ${u.warns>=i?'active':''}"></div>`;
+                
                 el.innerHTML += `
                     <div class="card" style="display:flex; align-items:center; gap:15px;">
-                        <div style="width:40px; height:40px; background:#222; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:bold;">${u.name[0]}</div>
-                        <div>
+                        <div class="avatar" style="width:45px; height:45px; font-size:1.2rem;">${u.name[0]}</div>
+                        <div style="flex:1">
                             <b>${u.name}</b> <small style="color:#666">(${u.role})</small><br>
-                            <small>${u.phone}</small>
+                            <small style="color:var(--green)">XP: ${u.xp || 0}</small>
+                            <div class="warn-dots">${dots}</div>
                         </div>
+                        ${ME.role === 'director' && u.phone !== ME.phone ? `
+                            <button onclick="window.warn('${u.phone}')" style="background:var(--red); color:#fff; border:none; padding:6px 10px; border-radius:6px; font-weight:bold; font-size:0.65rem;">WARN</button>
+                        ` : ''}
                     </div>
                 `;
             });
         }
 
-        // --- ДЕЙСТВИЯ ---
-        window.addOrder = () => {
-            const c=document.getElementById('c').value, p=document.getElementById('p').value, d=document.getElementById('d').value, r=document.getElementById('r').value;
-            if(!c || !p) return alert('Заполните поля');
-            push(ref(db, 'orders'), { client:c, price:p, desc:d, ref:r, status:'new', date: new Date().toISOString() });
-            window.nav('orders');
-        };
-
-        window.upd = (k, s) => update(ref(db, 'orders/'+k), { status:s });
-
-        window.send = () => {
-            const t = document.getElementById('msg-in').value;
-            if(t) { push(ref(db, 'chat'), { user: ME.name, text: t, time: Date.now() }); document.getElementById('msg-in').value=''; }
-        };
-
-        function drawChat() {
-            const f = document.getElementById('chat-feed');
-            if(!f || !CHAT) return;
-            f.innerHTML = '';
-            Object.values(CHAT).forEach(m => {
-                const me = m.user === ME.name;
-                f.innerHTML += `<div class="msg ${me?'msg-me':'msg-other'}"><small style="opacity:0.5">${m.user}</small><br>${m.text}</div>`;
-            });
-            f.scrollTop = f.scrollHeight;
-        }
-
-        // --- СЛУШАТЕЛИ FIREBASE (ОБНОВЛЕНИЕ В РЕАЛЬНОМ ВРЕМЕНИ) ---
-        onValue(ref(db, 'orders'), (s) => { ORDERS = s.val(); if(document.getElementById('n-orders').classList.contains('active')) renderOrders(document.getElementById('view')); });
-        onValue(ref(db, 'users'), (s) => { USERS = s.val(); });
-        onValue(ref(db, 'chat'), (s) => { CHAT = s.val(); if(document.getElementById('n-chat').classList.contains('active')) drawChat(); });
-
-        // Скрываем загрузку
-        setTimeout(()=>document.getElementById('loader').style.display='none', 1500);
-
-    </script>
-</body>
-</html>
+        function renderFin(el) {
+            const done = Object.values(DATA.orders || {}).filter(o => 
